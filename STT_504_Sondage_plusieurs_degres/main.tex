@@ -1,0 +1,184 @@
+\documentclass[12pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath,amssymb,tabularx}
+\usepackage{graphicx}
+\usetheme{jambro}
+
+\title[STT 504 Sondage]{Sondage à Plusieurs Dégrés}
+\author{FM, Université Soumaré}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Sommaire}
+\tableofcontents
+\end{frame}
+
+% ==============================================
+\section{7.1 Principe et justification}
+% ==============================================
+\begin{frame}{7.1 Contexte et motivation}
+\small
+\textbf{Problématique :} Absence de base de sondage actualisée (ex: pays en développement).  
+\textbf{Solution :} Tirage hiérarchique :
+\begin{itemize}
+    \item Unités Primaires (UP) : Départements/villages
+    \item Unités Secondaires (US) : Exploitations agricoles/ménages
+\end{itemize}
+
+\begin{exampleblock}{Exemple concret}
+Enquête agricole en 3 étapes :
+\begin{enumerate}
+    \item Tirage de départements (UP)
+    \item Tirage de villages dans les UP sélectionnées
+    \item Tirage final d'exploitations agricoles
+\end{enumerate}
+\end{exampleblock}
+
+\begin{alertblock}{Avantages clés}
+\begin{itemize}
+    \item Réduction des coûts logistiques
+    \item Concentration géographique des enquêtes
+    \item Taille d'échantillon optimisée sous contrainte budgétaire
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+% ==============================================
+\section{7.2 Notations et définitions}
+% ==============================================
+\begin{frame}{7.2 Paramètres clés}
+\footnotesize
+\begin{tabular}{ll}
+$M$ & Nombre total d'UP \\
+$m$ & UP tirées \\
+$N_h$ & US dans l'UP $h$ \\
+$n_h$ & US tirées dans l'UP $h$ \\
+$\bar{N} = \frac{1}{M}\sum N_h$ & Taille moyenne des UP \\
+$f_1 = m/M$ & Taux de sondage primaire \\
+$f_{2h} = n_h/N_h$ & Taux de sondage secondaire \\
+$S_T^2 = \frac{1}{M-1}\sum(T_h - \bar{T})^2$ & Variance inter-UP \\
+$s_{2h}^2$ & Variance intra-UP $h$ \\
+\end{tabular}
+
+\begin{block}{Relation fondamentale}
+\[
+V(\hat{T}) = \underbrace{M^2(1 - f_1)\frac{S_T^2}{m}}_{\text{Variance inter}} + \underbrace{\frac{M}{m}\sum N_h^2(1 - f_{2h})\frac{s_{2h}^2}{n_h}}_{\text{Variance intra}}
+\]
+\end{block}
+\end{frame}
+
+% ==============================================
+\section{7.3 Stratégies de tirage}
+% ==============================================
+\begin{frame}{7.3.1 Tirage à probabilités égales}
+\scriptsize
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\[
+\hat{T} = \sum_{h=1}^m \sum_{i=1}^{n_h} \frac{MN_h}{mn_h}y_{hi}
+\]
+\begin{itemize}
+    \item UP tirées avec $\pi_h = m/M$
+    \item US tirées avec $\pi_{i|h} = n_h/N_h$
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\begin{exampleblock}{Cas auto-pondéré}
+Si $n_h = n_0$ constant et $\pi_h \propto N_h$ :
+\[
+\hat{T} = \frac{N}{mn_0}\sum y_{hi} \quad \text{(Moyenne simple)}
+\]
+\end{exampleblock}
+\end{column}
+\end{columns}
+
+\begin{alertblock}{Attention !}
+Adapter $n_h$ si $N_h' \neq N_h$ (tailles réelles vs théoriques) :
+\[
+n_{0h}' = \frac{N_h'}{N_h}n_0
+\]
+\end{alertblock}
+\end{frame}
+
+% ==============================================
+\section{7.4 Effet de grappe}
+% ==============================================
+\begin{frame}{7.4 Impact de la corrélation intra-UP}
+\footnotesize
+\textbf{Coefficient de corrélation intra-grappe :}
+\[
+\rho = \frac{\sum_{h=1}^M \sum_{i\neq j}(Y_{hi}-\bar{Y})(Y_{hj}-\bar{Y})}{(N-1)S^2}
+\]
+
+\begin{block}{Effet sur la variance}
+Pour UP de taille constante $N$ et $n$ US/UP :
+\[
+V(\hat{T}) = N^2\frac{S^2}{mn}\left(1 + \rho(n-1)\right)
+\]
+\end{block}
+
+\begin{itemize}
+    \item $\rho > 0$ : Similarité des réponses dans une UP
+    \item \textbf{Deff} = $1 + \rho(n-1)$ : Facteur d'inflation de variance
+\end{itemize}
+
+\begin{exampleblock}{Dimensionnement d'échantillon}
+\[
+n \geq \frac{1.96^2 P(1-P)}{\varepsilon^2(1-t)} \times \text{Deff} \quad (\text{Deff} \approx 1.5 \text{ par défaut})
+\]
+\end{exampleblock}
+\end{frame}
+
+% ==============================================
+\section{7.5 Optimisation budgétaire}
+% ==============================================
+\begin{frame}{7.5 Allocation optimale des ressources}
+\scriptsize
+\textbf{Fonction de coût :} 
+\[
+C_T = c_1m + c_2mn \quad \begin{cases}
+c_1 : \text{Coût fixe/UP} \\
+c_2 : \text{Coût variable/US}
+\end{cases}
+\]
+
+\textbf{Solution optimale :}
+\[
+\bar{n} = \sqrt{\frac{c_1}{c_2} \cdot \frac{1-\rho}{\rho}} \quad ; \quad m = \frac{C_T}{c_1 + c_2\bar{n}}
+\]
+
+\begin{block}{Stratégie pratique}
+\begin{enumerate}
+    \item Estimer $\rho$ via des enquêtes pilotes
+    \item Calculer $\bar{n}$ pour équilibrer variance et coût
+    \item Ajuster $m$ selon le budget disponible
+\end{enumerate}
+\end{block}
+
+\begin{alertblock}{Recommendation}
+Privilégier plus d'UP avec moins d'US/UP quand $\rho$ est élevé.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Synthèse des concepts clés}
+\begin{itemize}
+    \item[$\blacktriangleright$] Hiérarchie UP/US pour contourner l'absence de base de sondage
+    \item[$\blacktriangleright$] Double composante de variance (inter/intra-UP)
+    \item[$\blacktriangleright$] Impact critique de l'effet de grappe ($\rho$)
+    \item[$\blacktriangleright$] Optimisation budget-précision via $\bar{n}$ et $m$
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{block}{Perspective}
+Intégration avec la stratification et les probabilités inégales pour des plans complexes.
+\end{block}
+\end{frame}
+
+\end{document}

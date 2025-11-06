@@ -1,0 +1,219 @@
+\documentclass[12pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath,amssymb,tabularx,booktabs}
+\usepackage{graphicx}
+\usetheme{jambro}
+
+\title[STT 504 Sondage]{Non Reponse et Redressement}
+\author{FM, Université Soumaré}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Sommaire}
+\tableofcontents
+\end{frame}
+
+% ==============================================
+\section{9.1 Principes des redressements}
+% ==============================================
+\begin{frame}{9.1.1 Contexte et justification}
+\begin{itemize}
+\item Problème courant : Biais d'échantillonnage malgré un tirage probabiliste
+\item Solution : Utiliser des \textbf{variables auxiliaires} connues sur la population
+\item Objectifs :
+\begin{itemize}
+\item Améliorer la précision des estimateurs
+\item Corriger les déséquilibres structurels
+\item Compenser les non-réponses
+\end{itemize}
+\end{itemize}
+
+\begin{exampleblock}{Exemple concret}
+Enquête sur le revenu où l'âge moyen échantillonné diffère de la population. Utiliser la répartition démographique officielle pour redresser.
+\end{exampleblock}
+\end{frame}
+
+% ==============================================
+\section{9.2 Méthodes de redressement}
+% ==============================================
+\begin{frame}{9.2.1 Post-stratification simple}
+\scriptsize
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+\textbf{Estimateur post-stratifié :}
+\[
+\hat{\bar{Y}}_{post} = \frac{1}{N}\sum_{h=1}^H N_h \bar{y}_h
+\]
+\begin{itemize}
+\item $N_h$ : Taille connue des strates
+\item $\bar{y}_h$ : Moyenne échantillonnale par strate
+\end{itemize}
+
+\textbf{Variance approximée :}
+\[
+V(\hat{\bar{Y}}_{post}) \approx \frac{(1-f)}{n}\left(\sum \frac{N_h}{N}S_h^2\right) + \frac{1-f}{n^2}\left(\sum (1-\frac{N_h}{N})S_h^2\right)
+\]
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{alertblock}{Avantages/Inconvénients}
+\begin{itemize}
+\item[+] Simple à implémenter
+\item[+] Réduit le biais
+\item[--] Variance légèrement supérieure à la stratification classique
+\end{itemize}
+\end{alertblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{9.2.2 Raking Ratio (Calage sur marges)}
+\footnotesize
+\textbf{Objectif :} Aligner les marges d'un tableau croisé échantillon-population
+
+\begin{exampleblock}{Algorithme itératif}
+\begin{enumerate}
+\item Caler les lignes : $n_{ij}^{(1)} = n_{ij} \frac{N_i}{n_i}$
+\item Caler les colonnes : $n_{ij}^{(2)} = n_{ij}^{(1)} \frac{N_j}{n_j^{(1)}}$
+\item Répéter jusqu'à convergence
+\end{enumerate}
+\end{exampleblock}
+
+\begin{equation*}
+\begin{cases}
+\sum_j n_{ij} = N_i \\
+\sum_i n_{ij} = N_j 
+\end{cases}
+\end{equation*}
+
+\textbf{Application :} Enquêtes électorales avec calage sur âge/sexe/région
+\end{frame}
+
+% ==============================================
+\section{9.3 Méthodes paramétriques}
+% ==============================================
+\begin{frame}{9.3.1 Estimateur par ratio}
+\scriptsize
+\textbf{Hypothèse :} Relation linéaire $Y \approx rX$
+
+\[
+\hat{\bar{Y}}_{ratio} = \frac{\bar{X}}{\bar{x}} \bar{y} \quad \text{avec } \bar{X} \text{ connu}
+\]
+
+\textbf{Précision améliorée si :}
+\[
+\rho > \frac{1}{2}\frac{CV(X)}{CV(Y)}
+\]
+
+\begin{exampleblock}{Cas pratique}
+Estimation de la production agricole ($Y$) à partir de la superficie cultivée ($X$)
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{9.3.2 Régression linéaire}
+\footnotesize
+\textbf{Modèle :} $y_i = a + b x_i + \epsilon_i$
+
+\[
+\hat{\bar{Y}}_{reg} = \bar{y} + \hat{b}(\bar{X} - \bar{x})
+\]
+
+\textbf{Propriétés :}
+\begin{itemize}
+\item Biais d'ordre $1/n$
+\item Variance réduite : $V(\hat{\bar{Y}}_{reg}) \approx V(\hat{\bar{Y}})(1-\rho^2)$
+\end{itemize}
+
+\begin{alertblock}{Application}
+Correction de biais socio-démographiques dans les enquêtes santé
+\end{alertblock}
+\end{frame}
+
+% ==============================================
+\section{9.4 Traitement des non-réponses}
+% ==============================================
+\begin{frame}{9.4.1 Typologie des non-réponses}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\textbf{Non-réponse totale :}
+\begin{itemize}
+\item Aucune donnée collectée
+\item Causes : Absence, refus, erreur logistique
+\item Correction : Repondération
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Non-réponse partielle :}
+\begin{itemize}
+\item Données incomplètes
+\item Causes : Oubli, sensibilité
+\item Correction : Imputation
+\end{itemize}
+\end{column}
+\end{columns}
+
+\begin{block}{Règle empirique}
+Taux > 40\% $\Rightarrow$ Remettre en cause la validité de l'enquête
+\end{block}
+\end{frame}
+
+\begin{frame}{9.4.2 Méthodes de repondération}
+\scriptsize
+\textbf{Estimation des probabilités de réponse $R_i$ :}
+\[
+w'_i = \frac{w_i}{\hat{R}_i} \quad \text{avec } w_i = 1/\pi_i
+\]
+
+\begin{itemize}
+\item \textbf{Regroupement :} $\hat{R}_h = \frac{n_{h,répondants}}{n_h}$
+\item \textbf{Modèle logistique :} $R_i = \frac{e^{\beta X_i}}{1 + e^{\beta X_i}}$
+\end{itemize}
+
+\begin{equation*}
+\hat{\bar{Y}} = \frac{1}{N}\sum_{h=1}^H \frac{n_h}{n_{h,répondants}} \sum_{i \in h} y_i
+\end{equation*}
+\end{frame}
+
+\begin{frame}{9.4.3 Techniques d'imputation}
+\scriptsize
+\begin{tabular}{|l|l|l|}
+\toprule
+\textbf{Méthode} & \textbf{Principe} & \textbf{Usage} \\
+\midrule
+Hot-deck & Donneur similaire & Enquêtes ménages \\
+Cold-deck & Source externe & Séries temporelles \\
+Régression & Modèle prédictif & Données économiques \\
+Moyenne locale & Voisinage & Données spatiales \\
+\bottomrule
+\end{tabular}
+
+\begin{exampleblock}{Exemple d'imputation multiple}
+Utiliser MICE (Multiple Imputation by Chained Equations) pour des jeux de données complexes
+\end{exampleblock}
+\end{frame}
+
+% ==============================================
+\section*{Conclusion}
+% ==============================================
+\begin{frame}{Synthèse des bonnes pratiques}
+\begin{itemize}
+\item[$\bullet$] Valider systématiquement les hypothèses de redressement
+\item[$\bullet$] Documenter rigoureusement les taux de non-réponse
+\item[$\bullet$] Privilégier les méthodes transparentes et reproductibles
+\item[$\bullet$] Combiner méthodes paramétriques et non-paramétriques
+\end{itemize}
+
+\begin{block}{Perspectives}
+Intégration croissante de l'apprentissage automatique pour l'imputation avancée
+\end{block}
+\end{frame}
+
+\end{document}

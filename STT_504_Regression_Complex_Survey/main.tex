@@ -1,0 +1,250 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usefonttheme[onlymath]{serif}
+\title[Régression dans les enquêtes complexes]{Analyse de régression dans les enquêtes complexes : enjeux et solutions}
+\author{FM \small Université Soumaré}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+%------------------------------- Section 1 : Bases de la régression -------------------------------
+\section{Régression linéaire dans les échantillons aléatoires simples (SAS)}
+\begin{frame}{Modèle linéaire classique (MCO)}
+\textbf{Modèle :} Pour un SAS, on suppose :
+\[
+Y_i = \beta_0 + \beta_1 x_i + \epsilon_i \quad \text{(Équation 1)}
+\]
+\textbf{Hypothèses :}
+\begin{itemize}
+    \item[(A1)] Linéarité : $E[\epsilon_i] = 0$ (pas de biais systématique).
+    \item[(A2)] Homoscédasticité : $V[\epsilon_i] = \sigma^2$.
+    \item[(A3)] Indépendance : $Cov[\epsilon_i, \epsilon_j] = 0$ pour $i \neq j$.
+    \item[(A4)] Normalité : $\epsilon_i \sim \mathcal{N}(0, \sigma^2)$ (optionnel pour les tests).
+\end{itemize}
+\end{frame}
+
+%-------------------------------
+\begin{frame}{Estimation des paramètres}
+\textbf{Équations normales :}
+\[
+\begin{cases}
+\beta_0 n + \beta_1 \sum x_i = \sum y_i \\
+\beta_0 \sum x_i + \beta_1 \sum x_i^2 = \sum x_i y_i
+\end{cases}
+\]
+\vspace{-0.5cm}
+\textbf{Solutions :}
+\[
+\hat{\beta}_1 = \frac{\sum x_i y_i - \frac{(\sum x_i)(\sum y_i)}{n}}{\sum x_i^2 - \frac{(\sum x_i)^2}{n}}, \quad
+\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x}
+\]
+\textbf{Exemple (Figure 1) :} Données de 200 criminels (SAS).\\
+Résultat : $\hat{y} = 30.32 + 3.05x$ ($R^2 = 0.49$).
+\
+\end{frame}
+
+%------------------------------- Section 2 : Problèmes dans les enquêtes complexes ------------------
+\section{Enquêtes complexes : défis}
+\begin{frame}{Pièges courants}
+\textbf{1. Biais de sélection :}
+\begin{itemize}
+    \item Probabilités inégales ($\pi_i$) corrélées à $y$ (ex. : Figure 3).
+    \item Exemple : Sous-échantillonnage des hommes grands $\Rightarrow$ pente OLS biaisée (1.79 vs 3.05).
+\end{itemize}
+
+\textbf{2. Effets de plan :}
+\begin{itemize}
+    \item Clusters $\Rightarrow$ surestimation de la précision (deff > 1).
+    \item Stratification $\Rightarrow$ modèles hétérogènes par strate.
+\end{itemize}
+\end{frame}
+
+%-------------------------------
+\begin{frame}{Impact des poids d'échantillonnage}
+\textbf{Exemple (Figure 5) :} Échantillon non représentatif avec poids $w_i$ inversement liés à $\pi_i$.\\
+
+\footnotesize
+\begin{itemize}
+    \item Sans poids : $\hat{\beta}_1 = 1.79$.
+    \item Avec poids : $\hat{\beta}_1 \approx 3.05$.
+\end{itemize}
+\textbf{Formule corrigée :}
+\[
+\hat{B}_1 = \frac{\sum w_i x_i y_i - \frac{(\sum w_i x_i)(\sum w_i y_i)}{\sum w_i}}{\sum w_i x_i^2 - \frac{(\sum w_i x_i)^2}{\sum w_i}}
+\]
+\end{frame}
+
+%------------------------------- Section 3 : Solutions -------------------------------
+\section{Solutions pratiques}
+\begin{frame}{Intégrer le plan de sondage}
+\textbf{1. Estimation pondérée :}
+\begin{itemize}
+    \item Utiliser $w_i = 1/\pi_i$ dans les équations MCO.
+    \item Exemple : Estimateur de $\hat{B}_1$ pour la population finie (page 7).
+\end{itemize}
+\textbf{2. Vérification des hypothèses :}
+\begin{itemize}
+    \item Analyse des résidus (Figure 2) pour détecter des motifs.
+    \item Tests diagnostiques (homoscédasticité, indépendance).
+\end{itemize}
+
+\end{frame}
+
+%-------------------------------------------------------
+\section{Estimation des Erreurs Standards}
+%-------------------------------------------------------
+\begin{frame}{Formule Générale des Intervalles de Confiance}
+$$ \hat{\mathbf{B}} = (\mathbf{X}_s^T \mathbf{W}_s \mathbf{X}_s)^{-1} \mathbf{X}_s^T \mathbf{W}_s \mathbf{y}_s $$
+
+\[
+\hat{B}_1 \pm t_{\alpha/2} \sqrt{\hat{V}(\hat{B}_1)}
+\]
+avec  :
+\begin{itemize}
+    \item $$ W_s $$ la matrice diagonale basé sur le vecteur de poids
+\end{itemize}
+Degrés de liberté :
+\begin{itemize}
+    \item Linéarisation/Jackknife/BRR : $\text{(PSU échantillonnés)} - \text{(nombre de strates)}$
+    \item Méthode des groupes aléatoires : $\text{(nombre de groupes)} - 1$
+\end{itemize}
+\end{frame}
+
+%-------------------------------------------------------
+\subsection{Estimation par Linéarisation}
+%-------------------------------------------------------
+\begin{frame}{Estimateur de Variance par Linéarisation}
+\begin{block}{Approche}
+La pente $B_1$ est fonction de 4 totaux populaires ($t_{xy}, t_x, t_y, t_{x^2}$). Par linéarisation de Taylor :
+\end{block}
+
+\[
+V_L(\hat{B}_1) \approx \frac{\hat{V}\left(\sum_{i \in S} w_i q_i\right)}{\left(\sum w_i x_i^2 - \frac{(\sum w_i x_i)^2}{\sum w_i}\right)^2}
+\]
+
+où :
+\[
+q_i = (y_i - \hat{B}_0 - \hat{B}_1 x_i)(x_i - \bar{x})
+\]
+\end{frame}
+
+\begin{frame}{Exemple pour un SRS}
+En ignorant la correction pour population finie (fpc) :
+
+\[
+\hat{V}_L(\hat{B}_1) = \frac{n \sum (x_i - \bar{x}_S)^2 (y_i - \hat{B}_0 - \hat{B}_1 x_i)^2}{(n-1)\left[\sum (x_i - \bar{x}_S)^2\right]^2}
+\]
+
+Comparaison avec l'estimateur modèle :
+\[
+\hat{V}_M(\hat{B}_1) = \frac{\sum (y_i - \hat{B}_0 - \hat{B}_1 x_i)^2}{(n-2)\sum (x_i - \bar{x})^2}
+\]
+
+\begin{alertblock}{Différence}
+$\hat{V}_L$ vient du plan de sondage, $\hat{V}_M$ du modèle statistique
+\end{alertblock}
+\end{frame}
+
+%-------------------------------------------------------
+\subsection{Méthode Jackknife}
+%-------------------------------------------------------
+\begin{frame}{Estimateur Jackknife}
+Pour un plan stratifié à plusieurs degrés :
+
+\[
+w_{i(hj)} = 
+\begin{cases}
+0 & \text{si unité } i \text{ dans PSU } j \text{ (stratum } h) \\
+\frac{n_h}{n_h - 1}w_i & \text{sinon dans stratum } h \\
+w_i & \text{si unité } i \text{ pas dans stratum } h
+\end{cases}
+\]
+
+Variance Jackknife :
+\[
+\hat{V}_{JK}(\hat{B}_1) = \sum_{h=1}^H \frac{n_h - 1}{n_h} \sum_{j=1}^{n_h} (\hat{B}_{1(hj)} - \hat{B}_1)^2
+\]
+
+\begin{exampleblock}{Exemple}
+$\hat{V}_{JK} = 0.461$ (échantillon non proportionnel) vs $0.050$ (SRS)
+\end{exampleblock}
+\end{frame}
+
+%-------------------------------------------------------
+\section{Régression Multiple}
+%-------------------------------------------------------
+\begin{frame}{Formulation Matricielle}
+\begin{columns}
+\column{0.5\textwidth}
+Population finie :
+\[
+y_U = X_U B
+\]
+Estimateur pondéré :
+\[
+\hat{B} = (X_S^T W_S X_S)^{-1} X_S^T W_S y_S
+\]
+
+\end{columns}
+Variance :
+\[
+\hat{V}(\hat{B}) = (X_S^T W_S X_S)^{-1} \hat{V}\left(\sum w_i q_i\right) (X_S^T W_S X_S)^{-1}
+\]
+où :
+\[
+q_i = x_i^T(y_i - x_i^T \hat{B})
+\]
+
+\end{frame}
+
+%-------------------------------
+\begin{frame}{Choix d'approche : modèle vs design}
+
+\begin{itemize}
+    \item \textbf{Modèle-based} : Suppose un modèle superpopulationnel valide.
+    \item \textbf{Design-based} : Inférence basée sur le plan de sondage (ex. : estimateurs par poids).
+\end{itemize}
+\textbf{Recommandations :}
+\begin{itemize}
+    \item Si $\pi_i$ corrélé à $y$ : \textbf{Toujours utiliser les poids}.
+    \item Si clusters/strates : \textbf{Corriger les erreurs types} (ex. : bootstrap, linéarisation).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Principe sur l'intégration des pondérations dans une regression}
+\begin{itemize}
+    \item Effectuez-vous une régression pour produire des statistiques officielles qui seront utilisées pour déterminer les politiques publiques ? Si tel est le cas, vous pourriez vouloir utiliser les pondérations pour estimer les paramètres et le plan d'échantillonnage (ou la conception de l'enquête) pour faire des inférences sur ces paramètres. Si vous utilisez des pondérations pour estimer les moyennes de la population et des domaines, vous pourriez également vouloir les utiliser pour estimer les paramètres de régression afin que les résultats des différentes analyses soient cohérentes
+    \item  A-t-on procédé à un échantillonnage probabiliste ? Dans le cas contraire, il faut alors utiliser une approche basée sur un modèle
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Principe sur l'intégration des pondérations dans une regression}
+\begin{itemize}
+    \item Quelle est la taille de l'échantillon ? La théorie basée sur le plan d'échantillonnage (ou plan de sondage) repose sur de grandes tailles d'échantillon pour faire des inférences sur les paramètres. Si vous avez un échantillon de petite taille, vous devriez probablement utiliser une approche basée sur un modèle
+    \item Dans quelle mesure le sujet a-t-il été étudié auparavant ? Si la théorie scientifique et les investigations (ou études) empiriques antérieures appuient le modèle que vous proposez, vous pouvez faire davantage confiance à votre modèle et avoir plus d'assurance quant à une approche basée sur un modèle.
+\end{itemize}
+\end{frame}
+
+%------------------------------- Conclusion -------------------------------
+\section{Conclusion}
+\begin{frame}{Résumé}
+\begin{itemize}
+    \item Les enquêtes complexes nécessitent une analyse adaptée :
+    \begin{itemize}
+        \item Incorporer les poids pour corriger les biais de sélection.
+        \item Ajuster les erreurs types pour les clusters/strates.
+    \end{itemize}
+    \item Vérifier les hypothèses via des diagnostics (résidus, tests).
+    \item Choisir entre approche modèle-based et design-based selon le contexte.
+\end{itemize}
+\vspace{0.5cm}
+\textbf{Message clé :} Ignorer le plan de sondage peut rendre les résultats inutiles, voire trompeurs !
+\end{frame}
+
+\end{document}

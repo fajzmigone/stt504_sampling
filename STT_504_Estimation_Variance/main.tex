@@ -1,0 +1,633 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb}
+\usepackage{fancyvrb}
+\usepackage{graphicx}
+\usetheme{jambro}
+
+%\usetheme{Madrid}
+\title{Estimation de la Variance dans les Enquêtes Complexes}
+\author{FM}
+\institute{Université Soumaré}
+%\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+%---------------------- Section 1 : Contexte et Motivationo ----------------------
+
+\section{Contexte et Motivation}
+
+\begin{frame}{Contexte et motivation}
+\small
+\textbf{Problématique :} Au delà des estimateurs naturels, il est difficile de calculer / compute les variances des différents estimateurs.  
+
+\textbf{Solution :} Application d'approches provenant d'autres domaines des statistiques ou des mathematiques :
+\begin{itemize}
+    \item Mise à profit de la formule de Taylor
+    \item Utilisation de la randomisation,
+    \item Utilisation des méthodes Bootstrap ou Jackknife provenant de l'estimation mathématique.
+\end{itemize}
+
+\begin{alertblock}{Avantages ET Inconvénients}
+\begin{itemize}
+    \item + Possibilité de calculer des variances dans des plans de sondage complexes
+    \item - Sous certaines conditions, les variances produites par ces méthodes sont plus grandes que la variance théorique attendue. 
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+\section{Positionnement Intuitif}
+\begin{frame}
+
+\textbf{Objectif} : estimer un paramètre qui est une fonction non-linéaire de totaux, \(\Phi = \Phi(t_Y, t_X, \ldots)\), et ensuite calculer ou approcher sa variance. On considère dans la suite que \(\Phi = \Phi(t_Y, t_X)\).
+
+\subsection*{Exemple :}
+\begin{itemize}
+    \item la moyenne \( \bar{y}_U = \frac{\sum_{U} y_k}{N} \) quand \(N\) est inconnu ;
+    \item le ratio (situation très fréquente)  
+          \[
+              R = \frac{\sum_{U} y_k}{\sum_{U} x_k},
+          \]
+    \item un coefficient d’une régression  
+          \[
+              B = \frac{\sum_{U} x_k y_k}{\sum_{U} x_k^2}.
+          \]
+\end{itemize}
+
+\subsection*{Question : Comment construire un estimateur ?}
+
+\textbf{La réponse est simple} : on écrit notre paramètre comme une fonction de totaux et ensuite, chaque total est remplacé par son estimateur HT,  
+\[
+    \hat{\Phi} = \Phi(\hat{t}_{y\pi}, \hat{t}_{x\pi})
+\]  
+appelé estimateur par substitution.
+\end{frame}
+\section*{Remarque}
+\begin{frame}
+Nous allons utiliser les mêmes poids \( 1/\pi_k \) quel que soit le total qu'on veut estimer puisque les \( \pi_k \) ne dépendent pas de la variable d'intérêt.
+
+\begin{itemize}
+    \item \( \bar{y}_U = \frac{\sum_{U} y_k}{N} \) est estimé par \( \hat{\bar{y}}_U = \frac{\sum_{s} y_k / \pi_k}{\sum_{s} 1 / \pi_k} \) (l'estimateur de Hajek),
+    \item \( \hat{R} = \frac{\sum_{s} y_k / \pi_k}{\sum_{s} x_k / \pi_k} \),
+    \item \( \hat{B} = \frac{\sum_{s} x_k y_k / \pi_k}{\sum_{s} x_k^2 / \pi_k} \).
+\end{itemize}
+
+Les estimateurs obtenus ne sont plus sans biais \textbf{mais pour} \( n \) \textbf{grand}, \textbf{le biais est négligeable}.
+
+\textbf{Difficulté} : il n'existe pas de formule générale pour la variance comme dans le cas linéaire. Nous allons essayer de nous ramener au cas linéaire par des techniques de linéarisation : un développement de Taylor de \( \Phi \) dans \((t_y, t_x)\).
+\end{frame}
+
+
+%---------------------- Section 2 : Bases théoriques ----------------------
+\section{Bases théoriques}
+\begin{frame}{Combinaisons Linéaires de Totaux}
+Pour \( \hat{t}_1, \dots, \hat{t}_k \) estimateurs non-biaisés de totaux :
+\[
+V\left(\sum_{i=1}^k a_i \hat{t}_i\right) = \sum_{i=1}^k a_i^2 V(\hat{t}_i) + 2 \sum_{i=1}^k \sum_{j>i} a_i a_j \text{Cov}(\hat{t}_i, \hat{t}_j)
+\]
+\underline{Exemple} : Si \( \hat{t}_{\text{total}} = \hat{t}_1 + 150\hat{t}_2 + \hat{t}_3 \),
+\[
+V(\hat{t}_{\text{total}}) = V(\hat{t}_1) + 150^2 V(\hat{t}_2) + \dots + 300\text{Cov}(\hat{t}_2, \hat{t}_3)
+\]
+\end{frame}
+
+\begin{frame}{Approche par Linéarisation par Série de Taylor}
+\textbf{Idée} : Approximer une fonction non-linéaire \( h(t_1, \dots, t_k) \) par une fonction linéaire.\\
+\vspace{0.3cm}
+Développement de Taylor d'ordre 1 :
+\[
+h(\hat{t}_1, \dots, \hat{t}_k) \approx h(t_1, \dots, t_k) + \sum_{j=1}^k \frac{\partial h}{\partial t_j} (\hat{t}_j - t_j)
+\]
+où les dérivées partielles sont évaluées aux vraies valeurs \( t_1, \dots, t_k \).
+\end{frame}
+
+%---------------------- Section 3 : Application à l'estimateur de ratio ----------------------
+\section{Exemple : Estimateur de Ratio}
+\begin{frame}{Étapes de Linéarisation pour un Ratio}
+
+\textbf{Étape 1} : Exprimer le paramètre comme une fonction de totaux connus sur la population :
+Soit $h(c,d) = d/c$. on obtient : 
+\[
+B = h(t_x,t_y) = \frac{t_y}{t_x} \space \quad \text{et} \quad \hat{B} =  h(\hat t_x,\hat t_y)
+\]
+
+Soit \( B = \frac{t_y}{t_x} \) et \( \hat{B} = \frac{\hat{t}_y}{\hat{t}_x} \).\\
+\vspace{0.3cm}
+
+\textbf{Étape 2} : Calculer les dérivées partielles :
+\[
+\frac{\partial h}{\partial c} = -\frac{d}{c^2}, \quad \frac{\partial h}{\partial d} = \frac{1}{c}
+\]
+Évaluées en \( (t_x, t_y) \), on obtient :
+\[
+-\frac{t_y}{t_x^2} \quad \text{et} \quad \frac{1}{t_x}
+\]
+\end{frame}
+
+\begin{frame}{Approximation de l'Erreur}
+\textbf{Étape 3} : Approximation de \( \hat{B} - B \) :
+\[
+\hat{B} - B \approx -\frac{t_y}{t_x^2}(\hat{t}_x - t_x) + \frac{1}{t_x}(\hat{t}_y - t_y)
+\]
+\vspace{0.3cm}
+\end{frame}
+
+    
+\begin{frame}{Etape 4 : Approximation de l'erreur quadratique moyenne}
+L'espérance de l'erreur quadratique de \(\hat{B}\) s'approxime par :
+\begin{align*}
+E[(\hat{B} - B)^2] &\approx E \left[ \left\{ -\frac{t_y}{t_x^2} (\hat{t}_x - t_x) + \frac{1}{t_x} (\hat{t}_y - t_y) \right\}^2 \right] \\
+&= \frac{t_y^2}{t_x^4} V(\hat{t}_x) + \frac{1}{t_x^2} V(\hat{t}_y) - 2 \frac{t_y}{t_x^3} \Cov(\hat{t}_x, \hat{t}_y) \\
+&= \frac{1}{t_x^2} \left\{ B^2 V(\hat{t}_x) + V(\hat{t}_y) - 2B \Cov(\hat{t}_x, \hat{t}_y) \right\}.
+\end{align*}
+
+\vspace{2mm}
+Nous pouvons substituer des valeurs estimées pour \( B \), les variances, la covariance, et \( t_x \) dans l'équation ci-dessus.
+\vspace{2mm}
+Pour un \textbf{échantillon aléatoire simple (SRS) de taille \( n \)} :
+\begin{itemize}
+    \item \( V(\hat{t}_x) = N^2\left(1 - \frac{n}{N}\right)\frac{S_x^2}{n} \)
+    \item \( V(\hat{t}_y) = N^2\left(1 - \frac{n}{N}\right)\frac{S_y^2}{n} \)
+    \item \( \cov(\hat{t}_x, \hat{t}_y) = N^2\left(1 - \frac{n}{N}\right)\frac{R S_x S_y}{n} \)
+\end{itemize}
+
+\footnotesize
+Note : \( R = \) coefficient de corrélation, \( S_x^2/S_y^2 = \) variances populationnelles.
+
+\end{frame}
+
+%---------------------- Section 4 : Avantages et Inconvénients ----------------------
+\section{Avantages et Inconvénients}
+\begin{frame}{Avantages}
+\begin{itemize}
+\item \textbf{Polyvalence} : Applicable à des plans d'échantillonnage complexes.
+\item \textbf{Théorie bien établie} : Méthode éprouvée depuis les années 1970 (Woodruff).
+\item \textbf{Logiciels disponibles} : Implémentée dans des outils comme SAS, R, ou Stata.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Inconvénients}
+\begin{itemize}
+\item \textbf{Calculs complexes} : Nécessite des dérivées partielles analytiques/numériques.
+\item \textbf{Biais pour petits échantillons} : Sous-estimation possible de la variance.
+\item \textbf{Inapplicabilité à certaines statistiques} : Médianes, quantiles, etc.
+\end{itemize}
+\end{frame}
+
+%---------------------- Section 5 : Conclusion ----------------------
+
+\begin{frame}{Résumé}
+\begin{itemize}
+\item La linéarisation par série de Taylor permet d'étendre les formules de variance aux fonctions non-linéaires.
+\item Requiert des dérivées partielles et une taille d'échantillon suffisante.
+\item Méthode robuste mais limitée pour les statistiques non-lisses.
+\end{itemize}
+\end{frame}
+
+%---------------------- B : Replication ----------------------
+
+\begin{frame}{Principe de la réplication}
+    On répète le plan de sondage de façon indépendante $R$ fois. \\
+    Chaque répétition donne une estimation $\hat{\theta}_r$.
+
+    \vspace{0.5cm}
+    Moyenne des estimations :
+    \[
+    \bar{\hat{\theta}} = \frac{1}{R} \sum_{r=1}^R \hat{\theta}_r
+    \]
+
+    Estimation de la variance :
+    \[
+    \hat{V}_1(\bar{\hat{\theta}}) = \frac{1}{R(R - 1)} \sum_{r=1}^{R} (\hat{\theta}_r - \bar{\hat{\theta}})^2
+    \]
+\end{frame}
+
+\begin{frame}{Ratio des frais de scolarité}
+    \begin{itemize}
+        \item Objectif : estimer le ratio des frais pour non-résidents vs résidents
+        \item 4 échantillons de 10 universités chacun
+    \end{itemize}
+
+    \vspace{0.3cm}
+    Estimations obtenues :
+    \[
+    \hat{\theta}_1 = 2{,}3288,\quad
+    \hat{\theta}_2 = 2{,}5802,\quad
+    \hat{\theta}_3 = 2{,}4591,\quad
+    \hat{\theta}_4 = 3{,}1110
+    \]
+
+    \vspace{0.3cm}
+    Moyenne : $\bar{\hat{\theta}} = 2{,}6198$ \\
+    Erreur-type estimée : $0{,}172$
+
+    \vspace{0.3cm}
+    Intervalle de confiance à 95\% :
+    \[
+    \bar{\hat{\theta}} \pm t_{3; 0{,}975} \cdot \text{SE} \approx [2{,}072,\ 3{,}168]
+    \]
+\end{frame}
+
+\begin{frame}{Méthode des groupes aléatoires}
+    \begin{itemize}
+        \item On divise un grand échantillon en $R$ groupes aléatoires
+        \item Chaque groupe fournit une estimation $\hat{\theta}_r$
+        \item Si $\hat{\theta}$ est une fonction non linéaire, alors $\bar{\hat{\theta}} \neq \hat{\theta}$
+    \end{itemize}
+
+    \vspace{0.5cm}
+    On peut alors utiliser :
+    \[
+    \hat{V}_2(\bar{\hat{\theta}}) = \frac{1}{R(R - 1)} \sum_{r=1}^R (\hat{\theta}_r - \hat{\theta})^2
+    \]
+\end{frame}
+
+\begin{frame}{ Estimation de l’âge moyen}
+    \begin{itemize}
+        \item Données de 1987 sur jeunes en détention
+        \item 7 groupes aléatoires, répartis sur 16 strates
+    \end{itemize}
+
+    \vspace{0.3cm}
+    Estimations d’âge moyen :\\
+    16,55 ; 16,66 ; 16,83 ; 16,06 ; 16,32 ; 17,03 ; 17,27
+
+    \vspace{0.3cm}
+    Moyenne des groupes : $\bar{\hat{\theta}} = 16{,}67$ \\
+    Estimation sur tout l’échantillon : $\hat{\theta} = 16{,}64$
+
+    \vspace{0.3cm}
+    Variance estimée :
+    \[
+    \hat{V}_1 = 0{,}024,\quad \hat{V}_2 = 0{,}025
+    \]
+
+    Intervalle de confiance 95\% : $[16{,}3\ ;\ 17{,}0]$
+\end{frame}
+
+\begin{frame}{Avantages de la méthode}
+    \begin{itemize}
+        \item Pas besoin de logiciel spécialisé
+        \item Fonctionne avec des estimateurs complexes ou non paramétriques
+        \item Facilement adaptable aux pondérations
+        \item Permet de construire des intervalles de confiance pour diverses quantités
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Inconvénients}
+    \begin{itemize}
+        \item Peu de groupes $\Rightarrow$ estimation de variance peu fiable
+        \item Recommandé d’avoir au moins 10 groupes
+        \item Moins simple à appliquer avec des plans stratifiés ou à plusieurs degrés
+        \item La structure du plan peut limiter le nombre de groupes possibles
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Méthodes de rééchantillonnage}
+\begin{itemize}
+    \item Objectif : Estimer la variance d'un estimateur dans des plans d'échantillonnage complexes
+    \item Deux approches principales :
+    \begin{itemize}
+        \item Méthodes des groupes aléatoires (instables si peu de groupes)
+        \item Méthodes de rééchantillonnage (BRR, Jackknife, Bootstrap)
+    \end{itemize}
+    \item BRR particulièrement adapté aux plans stratifiés avec \textbf{2 UPE par strate}
+\end{itemize}
+\end{frame}
+
+\section{Balanced Repeated Replication (BRR)}
+
+\begin{frame}{Principe de base de BRR}
+\begin{block}{Concept clé}
+Utiliser des \textbf{demi-échantillons équilibrés} pour estimer la variance :
+\begin{itemize}
+    \item Création de $2^H$ combinaisons possibles (H = nombre de strates)
+    \item Sélection d'un sous-ensemble équilibré de R répliques
+\end{itemize}
+\end{block}
+
+\[
+\hat{V}_{\text{BRR}}(\hat{\theta}) = \frac{1}{R}\sum_{r=1}^{R} [\hat{\theta}(\alpha_r) - \hat{\theta}]^2
+\]
+\end{frame}
+
+\begin{frame}{Exemple avec 7 strates}
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{cccccc}
+\toprule
+Strate & $N_h/N$ & $y_{h1}$ & $y_{h2}$ & $\bar{y}_h$ \\
+\midrule
+1 & 0.30 & 2000 & 1792 & 1896 \\
+2 & 0.10 & 4525 & 4735 & 4630 \\
+... & ... & ... & ... & ... \\
+7 & 0.20 & 2106 & 2070 & 2088 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Estimateur stratifié :
+\[
+\bar{y}_{\text{str}} = 4451.7 \quad \hat{V}_{\text{str}} = 55\,892.75
+\]
+\end{frame}
+
+\begin{frame}{Matrice de conception équilibrée}
+Exemple de matrice orthogonale pour 8 répliques (7 strates) :
+\scriptsize
+\[
+\begin{array}{ccccccc}
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+\hline
+\alpha_1 & -1 & -1 & -1 & 1 & 1 & 1 & -1 \\
+\alpha_2 & 1 & -1 & -1 & -1 & -1 & 1 & 1 \\
+... & ... & ... & ... & ... & ... & ... & ... \\
+\alpha_8 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+\end{array}
+\]
+\normalsize
+Propriété d'équilibre :
+\[
+\sum_{r=1}^{R} \alpha_{rh}\alpha_{rl} = 0 \quad \forall l \neq h
+\]
+\end{frame}
+
+\section{Application pratique}
+
+\begin{frame}{Mise en œuvre dans les enquêtes complexes}
+\begin{itemize}
+    \item Pondérations ajustées :
+    \[
+    w_{hi}(\alpha_r) = 
+    \begin{cases}
+    2w_{hi} & \text{si inclus} \\
+    0 & \text{sinon}
+    \end{cases}
+    \]
+    \item Applicable aux :
+    \begin{itemize}
+        \item Totaux et ratios
+        \item Quantiles et médianes
+        \item Fonctions non linéaires
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Exemple : Enquête SIPP (États-Unis)}
+\begin{itemize}
+    \item Problème : Strates avec 1 UPE
+    \item Solution : Création de \textbf{pseudo-strates}
+    \item 72 pseudo-strates avec 2 UPE chacune
+    \item Estimation pour sous-populations :
+    \begin{itemize}
+        \item Moyenne des prestations sociales
+        \item Médiane des paiements
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Avantages et limites}
+
+\begin{frame}{Bilan BRR}
+\begin{columns}
+\begin{column}{0.48\textwidth}
+\textbf{Avantages}
+\begin{itemize}
+    \item Equivalence asymptotique avec linéarisation
+    \item Faible nombre de répliques (R ≈ H)
+    \item Cohérence pour les quantiles
+\end{itemize}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\textbf{Limites}
+\begin{itemize}
+    \item Nécessite 2 UPE/strate
+    \item Surestimation possible si sondage sans remise
+    \item Complexité de mise en œuvre
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+%*********************Bootstrap********************************************%
+
+\begin{frame}{Introduction au Bootstrap}
+\begin{itemize}
+    \item Le \textbf{bootstrap} est une méthode de rééchantillonnage.
+    \item Développée par \textbf{Efron} (1979, 1982), adaptée aux sondages complexes par \textbf{Efron et Tibshirani} (1993).
+    \item Permet d’estimer la variance de statistiques, même pour des fonctions non lisses (comme la médiane).
+    \item On traite l’échantillon \( S \) comme une population pour en tirer des rééchantillons avec remise.
+\end{itemize}
+\end{frame}
+
+% Slide 2 - Objectif
+\begin{frame}{Objectif de la présentation}
+\begin{itemize}
+    \item Expliquer la logique du bootstrap à travers un exemple concret.
+    \item Estimer la variance de la médiane d’une population.
+    \item Présenter une version du bootstrap adaptée aux échantillons aléatoires stratifiés.
+\end{itemize}
+\end{frame}
+
+% Slide 3 - Principe général
+\begin{frame}{Principe du Bootstrap (SAS)}
+\begin{itemize}
+    \item Supposons que \( S \) est un échantillon aléatoire simple (SAS) de taille \( n \).
+    \item On tire \( R \) échantillons de taille \( n \) avec remise depuis \( S \).
+    \item Pour chaque rééchantillon, on calcule l’estimateur \( \hat{\theta}^*_r \).
+    \item On calcule ensuite la moyenne, la variance et un intervalle de confiance de ces valeurs.
+\end{itemize}
+\textit{En mots : on répète l’estimation plusieurs fois en recréant des jeux de données artificiels à partir de l’échantillon initial.}
+\end{frame}
+
+% Slide 4 - Exemple 9.8
+\begin{frame}{ Estimation de la variance de la médiane}
+\begin{itemize}
+    \item Population : taille médiane \( \theta = 168 \) centimètres.
+    \item Échantillon \texttt{ht.srs} : médiane \( \hat{\theta} = 169 \).
+    \item Taille de l’échantillon : \( n = 200 \).
+    \item On tire 2000 échantillons de taille 200 avec remise.
+    \item Pour chaque rééchantillon, on calcule la médiane.
+\end{itemize}
+\textit{En mots : on estime la distribution des médianes sur les 2000 échantillons.}
+\end{frame}
+
+% Slide 5 - Résultats empiriques
+\begin{frame}{Distribution des 2000 médianes bootstrap}
+\begin{table}[]
+\centering
+\begin{tabular}{lcccccccccccc}
+\toprule
+Médiane & 165.0 & 166.0 & 166.5 & 167.0 & 167.5 & 168.0 & 168.5 & 169.0 & 169.5 & 170.0 & 170.5 & 171.0 \\
+Fréquence & 1 & 5 & 2 & 40 & 15 & 268 & 87 & 739 & 111 & 491 & 44 & 188 \\
+\bottomrule
+\end{tabular}
+\caption{Tableau des fréquences des 2000 rééchantillons}
+\end{table}
+\end{frame}
+
+% Slide 6 - Intervalles de confiance
+\begin{frame}{Résultats statistiques}
+\begin{itemize}
+    \item Moyenne des 2000 médianes : \( 169.3 \) cm
+    \item Variance estimée (bootstrap) : \( 0.9148 \)
+    \item Intervalle de confiance à 95 \% : \([167.5, 171]\) cm
+    \item En mots : pour obtenir un IC à 95\%, on prend les 2.5\% et 97.5\% percentiles de la distribution bootstrap.
+\end{itemize}
+\end{frame}
+
+% Slide 7 - Cas stratifié
+\begin{frame}{Bootstrap pour échantillon stratifié (méthode de Rao et Wu)}
+\begin{enumerate}
+    \item Pour chaque strate \( h \), tirer un SAS de taille \( n_h - 1 \) avec remise.
+    \item Calculer les poids :
+    \begin{itemize}
+        \item Formule : \( w_i(r) = w_i \cdot \frac{n_h}{n_h - 1} \cdot m_i(r) \)
+        \item En mots : multiplier le poids initial \( w_i \) par le ratio d’ajustement \( \frac{n_h}{n_h - 1} \), puis par le nombre de fois que l’observation \( i \) apparaît dans l’échantillon \( r \).
+    \end{itemize}
+    \item Calculer \( \hat{\theta}_r^* \) pour chaque rééchantillon.
+    \item Répéter pour \( R \) itérations et calculer la variance bootstrap :
+    \[
+    \hat{V}_B(\hat{\theta}) = \frac{1}{R - 1} \sum_{r=1}^R (\hat{\theta}^*_r - \bar{\hat{\theta}}^*)^2
+    \]
+    \textit{En mots : variance empirique des estimations bootstrap.}
+\end{enumerate}
+\end{frame}
+
+% Slide 8 - Avantages
+\begin{frame}{Avantages du Bootstrap}
+\begin{itemize}
+    \item Fonctionne même pour des statistiques non lisses (ex: quantiles).
+    \item Permet une estimation directe des intervalles de confiance : percentiles.
+    \item Flexible : applicable à divers plans d’échantillonnage.
+\end{itemize}
+\end{frame}
+
+% Slide 9 - Inconvénients
+\begin{frame}{Inconvénients du Bootstrap}
+\begin{itemize}
+    \item Coût computationnel élevé : nécessite un grand nombre de réplications \( R \).
+    \item Moins de travaux théoriques pour les plans complexes comparé au BRR ou jackknife.
+    \item Mise en œuvre parfois complexe selon la structure de l’échantillon.
+\end{itemize}
+\end{frame}
+
+% Slide 10 - Conclusion
+\begin{frame}{Conclusion}
+\begin{itemize}
+    \item Le bootstrap est une méthode puissante d’estimation de la variance.
+    \item Il est particulièrement utile pour des statistiques comme la médiane.
+    \item Malgré sa lourdeur computationnelle, il offre flexibilité et efficacité.
+    \item Une méthode incontournable en statistique moderne.
+\end{itemize}
+\end{frame}
+
+\section{La méthode du Jackknife}
+
+\begin{frame}{Introduction à la méthode du Jackknife}
+    \begin{itemize}
+        \item La méthode du \textbf{jackknife}, comme la méthode des groupes aléatoires répliqués (BRR), permet d'estimer la variance en utilisant des groupes qui se chevauchent.
+        \item Introduite par \textbf{Quenouille} (1949, 1956), et popularisée par \textbf{Tukey} (1958) pour réduire le biais et estimer les variances.
+        \item Le principe repose sur la suppression d’une seule observation à la fois : \textbf{jackknife delete-1}.
+        \item Utilisée pour construire des intervalles de confiance et obtenir des estimateurs de variance non biaisés.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Estimateur Jackknife delete-1}
+    Soit un échantillon aléatoire simple (SAS). On note :
+    \[
+    \hat{V}_{JK}(\hat{\theta}) = \frac{n - 1}{n} \sum_{j=1}^{n} \left( \hat{\theta}_{(j)} - \hat{\theta} \right)^2
+    \]
+    \begin{itemize}
+        \item $\hat{\theta}$ : estimateur basé sur l’échantillon complet.
+        \item $\hat{\theta}_{(j)}$ : estimateur obtenu sans la $j$\up{e} observation.
+        \item Équivalent à une estimation de variance avec remise.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Exemple 9.6 : Estimation du ratio de frais de scolarité}
+    \begin{itemize}
+        \item Objectif : estimer le ratio des frais de scolarité des étudiants non-résidents à ceux des résidents.
+        \item Pour chaque réplicat Jackknife, on omet une observation et on calcule :
+        \[
+        \hat{B}_{(j)} = \frac{\bar{y}_{(j)}}{\bar{x}_{(j)}}, \quad
+        \hat{V}_{JK}(\hat{B}) = \frac{n - 1}{n} \sum_{j=1}^{n} \left( \hat{B}_{(j)} - \hat{B} \right)^2
+        \]
+        \item Résultats :
+        \[
+        \hat{B} = 2{,}3288, \quad \sum(\hat{B}_{(j)} - \hat{B})^2 = 0{,}1043, \quad \hat{V}_{JK}(\hat{B}) = 0{,}0938
+        \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Extension à un échantillon en grappes}
+    \begin{itemize}
+        \item Supprimer une seule unité d’observation dans une grappe détruit la structure de corrélation intraclasse.
+        \item On applique alors le jackknife en supprimant \textbf{une grappe entière} (unité primaire d’échantillonnage, PSU).
+        \item Pour $H$ strates, et $n_h$ grappes dans la strate $h$ :
+        \[
+        \hat{V}_{JK}(\hat{\theta}) = \sum_{h=1}^{H} \frac{n_h - 1}{n_h} \sum_{j=1}^{n_h} \left( \hat{\theta}_{(h)j} - \hat{\theta} \right)^2
+        \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Poids Jackknife pour grappes}
+    Pour l’unité $i$ dans la strate $h$ et la grappe $j$, on définit le poids :
+    \[
+    w_{i(h)j} = 
+    \begin{cases}
+        w_i & \text{si l’unité $i$ n’est pas dans la strate } h \\
+        0 & \text{si $i$ est dans la grappe } j \text{ de la strate } h \\
+        \frac{n_h}{n_h - 1} w_i & \text{si $i$ est dans } h \text{ mais pas dans la grappe } j
+    \end{cases}
+    \]
+    On calcule ensuite l’estimateur $\hat{\theta}_{(h)j}$ avec ces poids modifiés.
+\end{frame}
+
+\begin{frame}{Exemple 9.7 : Volume moyen des œufs}
+    \begin{itemize}
+        \item Objectif : estimer la variance de la moyenne des volumes d’œufs.
+        \item Données : 184 grappes, donc $n = 184$, $h = 1$.
+        \item Estimateur initial : $\hat{\theta} = \bar{y} = \frac{4375{,}947}{1757} = 2{,}49$.
+        \item Valeurs de quelques réplicats :
+        \[
+        \hat{\theta}_{(1)} = 2{,}48034, \quad
+        \hat{\theta}_{(2)} = 2{,}4778, \quad
+        \hat{\theta}_{(184)} = 2{,}48374
+        \]
+        \item Variance estimée :
+        \[
+        \hat{V}_{JK}(\hat{\theta}) = 0{,}00373 \quad \Rightarrow \quad \text{Erreur standard} = 0{,}061
+        \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Avantages de la méthode Jackknife}
+    \begin{itemize}
+        \item Méthode polyvalente, applicable à une large variété de statistiques.
+        \item Compatible avec les plans d’échantillonnage stratifiés et à plusieurs degrés.
+        \item Fournit un estimateur cohérent de la variance lorsque $\theta$ est une fonction lisse des totaux de population.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Inconvénients de la méthode Jackknife}
+    \begin{itemize}
+        \item Estime mal la variance des quantiles dans un échantillon aléatoire simple (SAS).
+        \item Comportement inconnu pour les plans d’échantillonnage à probabilités inégales et sans remise.
+        \item Mauvais choix pour les statistiques fortement non linéaires.
+    \end{itemize}
+\end{frame}
+
+
+\end{document}

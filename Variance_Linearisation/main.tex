@@ -1,0 +1,50 @@
+\documentclass{article}
+\usetheme{jambro}
+\usepackage{graphicx} % Required for inserting images
+
+\title{Variance Linearisation}
+\author{ }
+
+\begin{document}
+
+\maketitle
+
+\section{$$ Var(\hat{B} - B) = Var(\hat{B})$$ si B est un esb}
+
+1.  **Estimateur sans biais:**
+    Par définition, un estimateur $\hat{B}$ est dit sans biais pour le paramètre $B$ si son espérance mathématique est égale à la vraie valeur du paramètre :
+    $$ E[\hat{B}] = B $$
+
+2.  **Variance de l'erreur d'estimation $(\hat{B} - B)$:**
+    La variance d'une variable aléatoire $X$ est définie comme $Var(X) = E[(X - E[X])^2]$. Appliquons cela à la variable aléatoire $(\hat{B} - B)$ :
+    $$ Var(\hat{B} - B) = E[ ((\hat{B} - B) - E[\hat{B} - B])^2 ] $$
+
+3.  **Calculons l'espérance de l'erreur d'estimation $E[\hat{B} - B]$:**
+    En utilisant la linéarité de l'espérance :
+    $$ E[\hat{B} - B] = E[\hat{B}] - E[B] $$
+    Comme $B$ est une constante (la vraie valeur du paramètre), son espérance est $B$ lui-même ($E[B] = B$).
+    Puisque $\hat{B}$ est un estimateur sans biais, nous savons que $E[\hat{B}] = B$.
+    Donc :
+    $$ E[\hat{B} - B] = B - B = 0 $$
+
+4.  **Simplifions l'expression de la variance de $(\hat{B} - B)$:**
+    En substituant $E[\hat{B} - B] = 0$ dans la formule de la variance :
+    $$ Var(\hat{B} - B) = E[ (\hat{B} - B - 0)^2 ] = E[ (\hat{B} - B)^2 ] $$
+    Cette quantité $E[ (\hat{B} - B)^2 ]$ est aussi connue sous le nom d'Erreur Quadratique Moyenne (EQM) ou Mean Squared Error (MSE) de l'estimateur $\hat{B}$.
+
+5.  **Considérons la variance de l'estimateur $\hat{B}$:**
+    La variance de $\hat{B}$ est définie comme :
+    $$ Var(\hat{B}) = E[ (\hat{B} - E[\hat{B}])^2 ] $$
+    Puisque $\hat{B}$ est sans biais, $E[\hat{B}] = B$. En substituant cela dans la définition de $Var(\hat{B})$ :
+    $$ Var(\hat{B}) = E[ (\hat{B} - B)^2 ] $$
+
+6.  **Conclusion:**
+    En comparant les résultats des étapes 4 et 5, nous voyons que :
+    $$ Var(\hat{B} - B) = E[ (\hat{B} - B)^2 ] $$
+    et
+    $$ Var(\hat{B}) = E[ (\hat{B} - B)^2 ] $$
+    Par conséquent, si $\hat{B}$ est un estimateur sans biais de $B$, alors la variance de l'erreur d'estimation $(\hat{B} - B)$ est égale à la variance de l'estimateur $\hat{B}$ :
+    $$ Var(\hat{B} - B) = Var(\hat{B}) $$
+
+En résumé, savoir que $\hat{B}$ est un estimateur sans biais de $B$ nous permet de conclure que la variance de $(\hat{B} - B)$ est exactement la même que la variance de $\hat{B}$.
+\end{document}

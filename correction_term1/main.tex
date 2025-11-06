@@ -1,0 +1,199 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{correction_term1}
+\author{franckmigone }
+\date{May 2025}
+
+\begin{document}
+
+\maketitle
+
+\section*{Exercice 1}
+\[
+\text{CI}_{95\%}
+  \;=\;
+  \hat{Y} \;\pm\; 1.96
+  \sqrt{
+    \left(\frac{N-n}{N}\right)\,
+    \frac{\hat{S}_y^{2}}{n}}
+  \;=\;
+  29.07
+  \;\pm\; 1.96
+  \sqrt{
+    \frac{2010-100}{2010}\,
+    \frac{707.945}{100}}
+  \;=\;
+  \bigl[\,23.99,\; 34.15\,\bigr]\;\text{ha}.
+\]
+
+\[
+\hat{Y}
+  = \frac{1}{n}\sum_{k \in S} y_k
+  = \frac{2907}{100}
+  = 29.07 \text{ ha}.
+\]
+
+\[
+\hat{S}_{y}^{2}
+  = \frac{n}{n-1}
+    \left(
+      \frac{1}{n}\sum_{k \in S} y_k^{2}
+      - \hat{Y}^{\,2}
+    \right)
+  = \frac{100}{99}
+    \left(
+      \frac{154\,593}{100}
+      - 29.07^{2}
+    \right)
+  = 707.945.
+\]
+
+\section*{Exercice 2}
+Une première façon de montrer cette égalité est la suivante :
+
+\[
+\frac{1}{2N^{2}}
+  \sum_{k \in U}\;
+  \sum_{\substack{\ell \in U\\ \ell \neq k}}
+  (y_{k} - y_{\ell})^{2}
+  \;=\;
+  \frac{1}{2N^{2}}
+  \sum_{k \in U}\;
+  \sum_{\ell \in U}
+  (y_{k} - y_{\ell})^{2}
+  \;=\;
+  \frac{1}{2N^{2}}\!\biggl(
+      \sum_{k \in U}\;
+      \sum_{\ell \in U} y_{k}^{2}
+      + \sum_{k \in U}\;
+        \sum_{\ell \in U} y_{\ell}^{2}
+      - 2 \sum_{k \in U}\;
+        \sum_{\ell \in U} y_{k}y_{\ell}
+    \biggr)
+\]
+
+\[
+= \frac{1}{N}\sum_{k \in U} y_{k}^{2}
+  \;-\;
+  \frac{1}{N^{2}}
+  \sum_{k \in U}\;
+  \sum_{\ell \in U} y_{k}y_{\ell}
+  \;=\;
+  \frac{1}{N}\sum_{k \in U} y_{k}^{2}
+  \;-\; \bar{Y}^{\,2}
+  \;=\;
+  \frac{1}{N}\sum_{k \in U} (y_{k} - \bar{Y})^{2}
+  \;=\; \sigma_{y}^{2}.
+\]
+
+Une seconde façon est :
+
+\[
+\frac{1}{2N^{2}}
+  \sum_{k \in U}\;
+  \sum_{\substack{\ell \in U\\ \ell \neq k}}
+  (y_{k} - y_{\ell})^{2}
+  \;=\;
+  \frac{1}{2N^{2}}
+  \sum_{k \in U}\;
+  \sum_{\ell \in U}
+  (y_{k} - \bar{Y} - y_{\ell} + \bar{Y})^{2}
+\]
+
+\[
+= \frac{1}{2N^{2}}
+  \sum_{k \in U}\;
+  \sum_{\ell \in U}
+  \Bigl[(y_{k} - \bar{Y})^{2}
+        + (y_{\ell} - \bar{Y})^{2}
+        - 2(y_{k} - \bar{Y})(y_{\ell} - \bar{Y})\Bigr]
+\]
+
+\[
+= \frac{1}{2N}\sum_{k \in U}(y_{k} - \bar{Y})^{2}
+  + \frac{1}{2N}\sum_{\ell \in U}(y_{\ell} - \bar{Y})^{2}
+  + 0
+  \;=\; \sigma_{y}^{2}.
+\]
+
+Ainsi, dans les deux démonstrations, on retrouve bien la variance
+\(\sigma_{y}^{2}\) de la population.
+
+\medskip
+\noindent\textbf{Estimateur sans biais de la variance $\sigma_{y}^{2}$}
+
+L’estimateur sans biais de $\sigma_{y}^{2}$ est défini par
+\[
+\widehat{\sigma}_{y}^{2}
+ \;=\;
+ \frac{1}{2N^{2}}
+ \sum_{k \in S}\;
+ \sum_{\substack{\ell \in S\\ \ell \neq k}}
+ \frac{(y_{k} - y_{\ell})^{2}}{\pi_{k\ell}},
+\]
+où $\pi_{k\ell}$ désigne la probabilité d’inclusion d’ordre 2.  
+Dans un plan simple sans remise à taille d’échantillon fixe,
+\[
+\pi_{k\ell}
+ \;=\;
+ \frac{n(n-1)}{N(N-1)},
+\]
+d’où
+\[
+\widehat{\sigma}_{y}^{2}
+ \;=\;
+ \frac{N(N-1)}{n(n-1)}
+ \,\frac{1}{2N^{2}}
+ \sum_{k \in S}\;
+ \sum_{\substack{\ell \in S\\ \ell \neq k}}
+ (y_{k} - y_{\ell})^{2}.
+\]
+
+En adaptant l’égalité (2.1) au seul échantillon $S$ (au lieu de l’univers $U$), on obtient
+\[
+\frac{1}{2n^{2}}
+ \sum_{k \in S}\;
+ \sum_{\substack{\ell \in S\\ \ell \neq k}}
+ (y_{k} - y_{\ell})^{2}
+ \;=\;
+ \frac{1}{n}
+ \sum_{k \in S} (y_{k} - \hat{Y})^{2},
+ \quad\text{où}\quad
+ \hat{Y}
+ \;=\;
+ \frac{1}{n}\sum_{k \in S} y_{k}.
+\]
+
+Par conséquent :
+\[
+\widehat{\sigma}_{y}^{2}
+ \;=\;
+ \frac{N-1}{N}\;
+ \frac{1}{\,n-1\,}
+ \sum_{k \in S}(y_{k} - \hat{Y})^{2}
+ \;=\;
+ \frac{N-1}{N}\;s_{y}^{2}.
+\]
+
+Ainsi,
+\[
+\boxed{\;
+  \widehat{\sigma}_{y}^{2}
+  \;=\;
+  \frac{N-1}{N}\,s_{y}^{2}
+  \;}, 
+\qquad
+\boxed{\;
+  \widehat{S}_{y}^{2}
+  \;=\;
+  \frac{N}{N-1}\,\widehat{\sigma}_{y}^{2}
+  \;=\;
+  s_{y}^{2}
+  \;}.
+\]
+
+Ce résultat est classique ; la démonstration serait plus longue sans recourir à l’égalité (2.1).
+
+
+\end{document}

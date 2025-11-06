@@ -1,0 +1,161 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{lmodern}
+\usetheme{jambro}
+
+\title[Chapitre 2]{Chapitre 2 : Les méthodes empiriques d’échantillonnage - Master 2 STT}
+\author{Franck MIGONE}
+\date{}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section{Introduction}
+
+\begin{frame}{Introduction}
+\begin{itemize}
+    \item Les méthodes empiriques d'échantillonnage sont aussi appelées \textbf{méthodes de sondages à choix raisonné}.
+    \item Elles permettent de rendre un échantillon représentatif même en l'absence d'information complète.
+    \item Utilisées lorsque :
+    \begin{itemize}
+        \item Les erreurs d’échantillonnage ne sont pas une préoccupation majeure.
+        \item Les ressources financières sont limitées.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Les différentes méthodes}
+
+\subsection{Méthode des quotas}
+
+\begin{frame}{Méthode des quotas}
+\begin{itemize}
+    \item Reproduit à échelle réduite la structure de l'univers statistique.
+    \item Nécessite la connaissance précise de la structure de l'univers.
+    \item Exemple :
+    \begin{itemize}
+        \item Étudier le salaire moyen des travailleurs selon le sexe, l'ancienneté, et la catégorie socioprofessionnelle.
+    \end{itemize}
+    \item Calcul des proportions des sous-populations pour guider les quotas.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Exemple d'application des quotas}
+\begin{itemize}
+    \item Total femmes : $106000$, total hommes : $86500$.
+    \item Femmes dans l'échantillon ($55,1\%$) : $551$.
+    \item Hommes dans l'échantillon ($44,9\%$) : $449$.
+\end{itemize}
+\begin{table}[]
+    \centering
+    \caption{Répartition des femmes dans l'échantillon}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Catégorie & A & B & C & D \\
+        \hline
+        0-5 ans & 8 & 26 & 104 & 52 \\
+        6-10 ans & 16 & 78 & 78 & 78 \\
+        11 ans et plus & 26 & 39 & 18 & 29 \\
+        \hline
+        Total & 49 & 143 & 200 & 158 \\
+        \hline
+    \end{tabular}
+\end{table}
+\end{frame}
+
+\subsection{Méthode des unités-types}
+
+\begin{frame}{Méthode des unités-types}
+\begin{itemize}
+    \item Subdivise la population en sous-populations homogènes.
+    \item Forme l'échantillon en choisissant des unités-types dans chaque sous-population.
+    \item Avantages :
+    \begin{itemize}
+        \item Rapidité.
+        \item Précision accrue pour les populations homogènes.
+    \end{itemize}
+    \item Extrapolation nécessite une connaissance précise des effectifs des groupes.
+\end{itemize}
+\end{frame}
+
+\subsection{Méthode des itinéraires}
+
+\begin{frame}{Méthode des itinéraires}
+\begin{itemize}
+    \item L'enquêteur suit des itinéraires précis et s'arrête à des lieux prédéterminés.
+    \item Avantages :
+    \begin{itemize}
+        \item Prend en compte les caractéristiques géographiques.
+        \item Coût réduit.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection{Méthode "boule de neige"}
+
+\begin{frame}{Méthode "boule de neige"}
+\begin{itemize}
+    \item Identifie un individu possédant une caractéristique rare.
+    \item Celui-ci indique d'autres individus similaires.
+    \item Avantages :
+    \begin{itemize}
+        \item Utile pour les populations difficiles à localiser.
+    \end{itemize}
+    \item Inconvénients :
+    \begin{itemize}
+        \item Biais de similarité.
+        \item Risque de double comptage.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection{Enquêtes par téléphone ou email}
+
+\begin{frame}{Enquêtes par téléphone ou email}
+\begin{itemize}
+    \item Enquêtes anonymes avec coûts réduits.
+    \item Contraintes :
+    \begin{itemize}
+        \item Représentativité limitée dans certains contextes (taux d'équipement).
+    \end{itemize}
+    \item Promesses futures :
+    \begin{itemize}
+        \item Téléphones mobiles en Afrique.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection{Enquêtes par volontariat}
+
+\begin{frame}{Enquêtes par volontariat}
+\begin{itemize}
+    \item Sollicitation d'individus prêts à participer spontanément à l'enquête.
+    \item Avantages :
+    \begin{itemize}
+        \item Facilité et coût réduit.
+    \end{itemize}
+    \item Inconvénients :
+    \begin{itemize}
+        \item Biais de sélection dû à la motivation des participants.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}{Conclusion}
+\begin{itemize}
+    \item Les méthodes empiriques sont essentielles dans des contextes où les ressources sont limitées.
+    \item Chaque méthode présente des avantages et des limites spécifiques :
+    \begin{itemize}
+        \item Les quotas offrent une structure représentative basée sur des proportions précises.
+        \item Les unités-types et itinéraires permettent d'adapter l'échantillon à des contextes géographiques ou homogènes.
+        \item Les enquêtes par téléphone, email ou volontariat apportent flexibilité mais peuvent souffrir de biais.
+    \end{itemize}
+    \item Un choix adapté au contexte garantit une meilleure représentativité et pertinence des résultats.
+\end{itemize}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,123 @@
+\documentclass[12pt,a4paper]{article}
+
+% Packages nécessaires
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Configuration de la page
+\geometry{left=2cm, right=2cm, top=2cm, bottom=2cm}
+
+% Informations de l'examen
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{2cm}
+        
+        \textbf{\LARGE Université Soumaré}\\
+        \vspace{1cm}
+        \textbf{\Large STT 504 : Évaluation de Sondage}\\
+        \vspace{1.5cm}
+        \textbf{\Large Mars 2025}\\
+        \vspace{1.5cm}
+        \vfill
+        \textbf{\large Instructions :}
+    \end{center}
+
+    \begin{itemize}
+        \item Répondez clairement et précisément aux questions.
+        \item Justifiez toutes vos réponses.
+        \item Aucun document n'est autorisé.
+    \end{itemize}
+    \vfill
+    \begin{center}
+        \textbf{Bonne chance !}
+    \end{center}
+\end{titlepage}
+\newpage
+
+
+\section*{Partie I : Questions Théoriques}
+\begin{enumerate}
+    \item  Expliquer de manière succinte le principe général du sondage probabiliste ;
+    \item Présenter les caractéristiques d'un plan de sondage typique ;
+    \item Comment est calculé la variance dans le plan de sondage de l'Enquête Démographique et de Santé 2016 ?
+    \item Indiquer les propriétés d'une base de sondage en sondage probabiliste ;
+    \item Présenter la méthodologie de sondage par unité type ;
+    \item Présenter la méthodologie de sondage par itinéraire.   
+    
+\end{enumerate}
+
+\section*{Partie II : Exercices Pratiques}
+
+\subsection*{Exercice 2.1 : Collecte de données et sources de biais}
+
+Pour chacune des opérations suivantes, décrivez la population cible, la base de sondage, 
+l'unité de sondage et l'unité d'observation. Discutez de toutes les sources possibles 
+de biais de sélection ou d'inexactitude des réponses.
+
+\begin{enumerate}
+    \item L'article \og What Readers Say About Marijuana \fg{} rapporte que 
+    \og plus de 75\% des lecteurs qui ont participé à un sondage téléphonique 
+    informel organisé par PARADE déclarent que la marijuana devrait être 
+    aussi légale que les boissons alcoolisées \fg{} (Parade, 31 juillet 1994, p.~16).
+    Le sondage téléphonique a été annoncé en page~5 de l'édition du 12 juin ; 
+    on demandait aux lecteurs d'appeler le \texttt{1-900-773-1200}, au coût de 
+    0,75\$ par appel, s'ils souhaitaient répondre aux questions suivantes. 
+    Il fallait utiliser un téléphone à clavier. Pour participer, il fallait appeler 
+    entre 8~h (heure avancée de l'Est) le samedi 11 juin et minuit (heure avancée 
+    de l'Est) le mercredi 15 juin.
+
+    \item Une étudiante souhaite estimer la proportion de fonds communs de placement 
+    dont le prix a augmenté la semaine précédente. Elle sélectionne un fonds 
+    sur dix dans la liste des fonds communs figurant dans le journal et calcule 
+    la proportion de ceux dont le prix de la part a augmenté.
+    
+    \item Pour estimer combien de livres dans la bibliothèque nécessitent une reliure, un bibliothécaire utilise une table de nombres aléatoires pour sélectionner au hasard 100 emplacements sur les étagères. Il se rend ensuite à chaque emplacement, examine le livre qui s'y trouve et note s'il a besoin d'être relié ou non.
+
+    \item Un échantillon de 8 architectes a été choisi dans une ville comptant 14 architectes et cabinets d'architecture. Pour sélectionner l'échantillon de l'enquête, chaque architecte a été contacté par téléphone dans l'ordre d'apparition dans l'annuaire téléphonique, selon la méthode C-4. Les 8 premiers à accepter d'être interviewés ont constitué l'échantillon.
+    
+\end{enumerate}
+
+\subsection*{Exercice 2.2 : Estimation sur Surface cultivée}
+
+Nous souhaitons estimer le nombre de bergers dans la population française. Pour cela, nous choisissons de sélectionner \mathbf{n}
+individus à l'aide d'un échantillon aléatoire simple. Si la proportion réelle (inconnue) de clercs dans la population est de 0,1 \%, combien de personnes doivent être sélectionnées pour obtenir un coefficient de variation (CV) de 5 \% ?
+
+\subsection*{Exercice 2.3 : Estimation de la variance de la population}
+
+Montrez que
+\[
+\sigma_y^2 
+= \frac{1}{N}\sum_{k \in U}\bigl(y_k - \overline{Y}\bigr)^2
+= \frac{1}{2N^2}\sum_{k \in U}\sum_{\ell \in U,\, \ell \neq k}
+\bigl(y_k - y_\ell\bigr)^2.
+\tag{2.1}
+\]
+
+Utilisez ensuite cette égalité pour (facilement) trouver un estimateur sans biais 
+de la variance de la population, noté $S_y^2$, dans le cas d'un échantillonnage 
+aléatoire simple, où 
+\[
+S_y^2 
+= \frac{N}{N-1}\,\sigma_y^2.
+\]
+
+\subsection*{Exercice 2.4 : Tirage systématique dans le Sondage Aléatoire Simple (SAS) }
+
+On veut sélectionner un échantillon de $n$ ménages dans la base de sondage des ménages de Cocody Abidjan. Soit $N$ Le nombre total de ménages dans la base de sondage.  
+
+\begin{enumerate}
+    \item Présenter la procédure de tirage systématique lorsque le pas est un entier naturel
+    \item Présenter la procédure de tirage systématique lorsque le pas est une valeur décimale.
+\end{enumerate}
+
+\vfill
+\noindent \textbf{Bonne chance !}
+
+
+\end{document}

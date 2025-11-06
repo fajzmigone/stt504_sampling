@@ -1,0 +1,157 @@
+\documentclass[12pt,a4paper]{article}
+
+% Packages nécessaires
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Configuration de la page
+\geometry{left=2cm, right=2cm, top=2cm, bottom=2cm}
+
+% Informations de l'examen
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{2cm}
+        
+        \textbf{\LARGE Université Soumaré}\\
+        \vspace{1cm}
+        \textbf{\Large STT 504 : Évaluation de Sondage}\\
+        \vspace{1.5cm}
+        \textbf{\Large April 2025}\\
+        \vspace{1.5cm}
+        \vfill
+        \textbf{\large Instructions :}
+    \end{center}
+
+    \begin{itemize}
+        \item Répondez clairement et précisément aux questions.
+        \item Justifiez toutes vos réponses.
+        \item Aucun document n'est autorisé.
+        \item Durée : 3h30.
+    \end{itemize}
+    \vfill
+    \begin{center}
+        \textbf{Bonne chance !}
+    \end{center}
+\end{titlepage}
+\newpage
+
+
+\section*{Partie I : Questions Théoriques}
+\begin{enumerate}
+    \item  Présenter la procédure de tirage par l’approche des totaux cumulés ;
+    \item Présenter la procédure de tirage par l’approche des probabilités cumulés  ?
+    \item Résumer en quelques lignes le sondage probabiliste ;
+  
+    
+\end{enumerate}
+
+\section*{Partie II : Exercices Pratiques}
+
+\subsection*{Exercice 2.1 : Effet de Plan}
+Lorsqu'on introduit des plans de sondage complexes et que l'on cherche à calculer la précision à l'aide d'un programme informatique, on obtient en général le calcul d’un ratio appelé « effet de plan » (design effect). Ce ratio est défini comme le rapport entre la variance de l’estimateur du total et la variance de l’estimateur que l’on obtiendrait si l’on avait réalisé un sondage aléatoire simple de même taille \( n \). On note \( \bar{y} \) la moyenne simple des \( y_k \) pour \( k \in S \).
+
+\begin{enumerate}
+  \item En notant \( \operatorname{Var}_p(\hat{Y}) \) la vraie variance (possiblement très compliquée) obtenue sous le plan complexe \( p \), donner l’expression de l’effet de plan (noté ci-après \( \text{DEFF} \)).
+
+  \item Comment peut-on naturellement estimer \( \text{DEFF} \) (nous noterons \( \widehat{\text{DEFF}} \) l’estimateur) ?
+
+  \item Nous nous limiterons désormais à des plans complexes à probabilités égales et de taille fixe. Dans ces conditions, comment peut-on estimer sans biais un total \( Y \) quelconque ?
+
+  \item Calculer l’espérance de la variance d’échantillon \( s_y^2 \) dans l’échantillon, sous le plan \( p \) (on note cela \( \mathbb{E}_p(s_y^2) \)). On exprimera cela comme une fonction de \( \operatorname{Var}_p(\hat{Y}) \), \( S_y^2 \), \( n \) et \( N \).
+
+  \item En considérant le dénominateur de \( \widehat{\text{DEFF}} \), montrer que son utilisation introduit un biais que l’on exprimera en fonction de \( n \), \( N \) et \( \operatorname{Var}_p(\hat{Y}) \). Pour cette question, on suppose que \( n \) est « grand ».
+
+  \item En déduire que le dénominateur de \( \widehat{\text{DEFF}} \) a une espérance égale à la valeur souhaitée multipliée par le facteur :
+  \[
+  \frac{1 - f}{1 - \text{DEFF}}
+  \]
+  Quelles conclusions peut-on tirer dans le cas où \( n \) est « grand » ?
+\end{enumerate}
+\subsection*{Exercice 2.2 : Cluster Design}
+Sur le disque dur d’un micro-ordinateur, on compte 400 fichiers, chacun contenant exactement 50 enregistrements. Pour estimer le nombre moyen de caractères par enregistrement, on décide de prélever un échantillon selon un plan de sondage aléatoire simple : 80 fichiers sont tirés au sort, puis 5 enregistrements dans chaque fichier.
+
+On note :
+\begin{itemize}
+  \item \( m = 80 \) : le nombre de fichiers sélectionnés ;
+  \item \( n = 5 \) : le nombre d’enregistrements sélectionnés dans chaque fichier.
+\end{itemize}
+
+Après le sondage, on observe :
+\begin{itemize}
+  \item la variance d’échantillon des estimateurs du nombre total de caractères par fichier est \( s_T^2 = 905\,000 \) ;
+  \item la moyenne des variances d’échantillon (dans chaque fichier) est égale à 805, c’est-à-dire :
+  \[
+  \frac{1}{m} \sum_{i=1}^m s_{i}^2 = 805,
+  \]
+  où \( s_i^2 \) représente la variance du nombre de caractères par enregistrement dans le fichier \( i \).
+\end{itemize}
+
+\begin{enumerate}
+  \item Comment peut-on estimer sans biais le nombre moyen de caractères par enregistrement \( \bar{Y} \) ?
+  
+  \item Comment peut-on estimer sans biais la précision de l’estimateur précédent ?
+  
+  \item Donner un intervalle de confiance à 95\,\% pour \( \bar{Y} \).
+\end{enumerate}
+
+\subsection*{Exercice 2.3 : Probabilité d'Inclusion}
+
+Une population est composée de 6 ménages, de tailles respectives : 2, 4, 3, 9, 1 et 2 (la taille d’un ménage est le nombre de personnes qu’il comprend). On sélectionne 3 ménages sans remise, avec une probabilité proportionnelle à leur taille.
+
+\begin{enumerate}
+  \item Donner, sous forme fractionnaire, les probabilités d’inclusion des 6 ménages dans la base de sondage (remarque : il peut être nécessaire de recalculer certaines probabilités).
+
+  \item Effectuer le tirage à l’aide de la méthode systématique.
+
+  \item À partir de l’échantillon obtenu à la question 2, donner une estimation de la taille moyenne \( \bar{X} \) des ménages. Le résultat était-il prévisible ?
+\end{enumerate}
+
+\subsection*{Exercice 2.4 : Calcul de variance}
+
+L'enquête emploi de l'INSEE de 1989 aboutit au Tableau 1, exprimé en milliers de personnes. La taille de l'échantillon est supérieure à 10000, et les intervalles de confiance sont donnés sous l'hypothèse de normalité asymptotique des estimateurs.
+
+\begin{table}[h!]
+    \centering
+    \caption{Population active, personnes ayant un emploi et chômeurs : Exercice 8.1}
+    \label{tab:emploi}
+    \begin{tabular}{lcc}
+        \toprule
+        & Effectif estimé & Intervalle de confiance à 95\% \\
+        \midrule
+        Population active & 24062 & $\pm$ 129 \\
+        Ayant un emploi & 21754 & $\pm$ 149 \\
+        Chômeurs        & 2308  & $\pm$ 76 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{enumerate}
+    \item Estimer le taux de chômage défini comme le pourcentage de chômeurs parmi la population active (la population active est la somme des personnes ayant un emploi et des chômeurs). Quel type d'estimateur est-ce ?
+
+    \item Donner l'expression mathématique approchée de l'erreur quadratique moyenne (EQM) estimée du taux de chômage estimé, en fonction de :
+    \begin{itemize}
+        \item la variance estimée de l'estimateur de la population active,
+        \item la variance estimée de l'estimateur du nombre de chômeurs,
+        \item la covariance estimée entre les estimateurs de la population active et du nombre de chômeurs,
+        \item l'estimateur de la population active,
+        \item et l'estimateur du taux de chômage.
+    \end{itemize}
+
+    \item Montrer que l'estimateur de l'EQM du taux de chômage peut être calculé avec les données du tableau. Indice : pour cela, on utilise le résultat général suivant. Soient $X$ et $Y$ deux variables aléatoires quelconques ; alors
+    $$ \text{cov}(X, Y) = \frac{\text{var}(X+Y) - \text{var}(X) - \text{var}(Y)}{2} $$
+
+    \item Utiliser l'expression précédente pour calculer l'estimation de la variance du taux de chômage et établir un intervalle de confiance estimé à 95\%.
+
+\end{enumerate}
+
+\vfill
+\noindent \textbf{Bonne chance !}
+
+
+\end{document}

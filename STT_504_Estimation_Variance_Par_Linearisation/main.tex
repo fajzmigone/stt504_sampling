@@ -1,0 +1,173 @@
+\documentclass[12pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath,amssymb,tabularx}
+\usepackage{graphicx}
+\usetheme{jambro}
+
+\title[STT 504 Sondage]{Estimation de la variance de statistiques non - linéaires dans des plans complexes}
+\author{FM, Université Soumaré}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Sommaire}
+\tableofcontents
+\end{frame}
+
+% ==============================================
+\section{8.0 Contexte et Motivation}
+% ==============================================
+\begin{frame}{8.1 Contexte et motivation}
+\small
+\textbf{Problématique :} Au delà des estimateurs naturels, il est difficile de calculer / compute les variances des différents estimateurs.  
+
+\textbf{Solution :} Application d'approches provenant d'autres domaines des statistiques ou des mathematiques :
+\begin{itemize}
+    \item Mise à profit de la formule de Taylor
+    \item Utilisation de la randomisation,
+    \item Utilisation des méthodes Bootstrap ou Jackknife provenant de l'estimation mathématique.
+\end{itemize}
+
+\begin{alertblock}{Avantages ET Inconvénients}
+\begin{itemize}
+    \item + Possibilité de calculer des variances dans des plans de sondage complexes
+    \item - Sous certaines conditions, les variances produites par ces méthodes sont plus grandes que la variance théorique attendue. 
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+% ==============================================
+\section{8.2 Méthode de linéarisation}
+% ==============================================
+% ==============================================
+\begin{frame}{8.2.1 Principe de base}
+% ==============================================
+\small
+L'Approche par linéarisation s'appuie sur la décomposition des fonctions en serie de Taylor.
+
+Soit l'objectif suivant : estimer un parametre qui est une fonction non-lineaire
+ de totaux, $\theta = f(t_Y,t_X) $ et ensuite calculer ou approcher sa variance.
+\end{frame}
+% ==============================================
+\begin{frame}{7.2.2 Généralisation}
+% ==============================================
+\end{frame}
+% ==============================================
+\begin{frame}{7.2.3 Cas d'usage}
+% ==============================================
+\end{frame}
+% ==============================================
+\section{7.3 Méthode des groupes aléatoire}
+% ==============================================
+\begin{frame}{7.3.1 Tirage à probabilités égales}
+\scriptsize
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\[
+\hat{T} = \sum_{h=1}^m \sum_{i=1}^{n_h} \frac{MN_h}{mn_h}y_{hi}
+\]
+\begin{itemize}
+    \item UP tirées avec $\pi_h = m/M$
+    \item US tirées avec $\pi_{i|h} = n_h/N_h$
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\begin{exampleblock}{Cas auto-pondéré}
+Si $n_h = n_0$ constant et $\pi_h \propto N_h$ :
+\[
+\hat{T} = \frac{N}{mn_0}\sum y_{hi} \quad \text{(Moyenne simple)}
+\]
+\end{exampleblock}
+\end{column}
+\end{columns}
+
+\begin{alertblock}{Attention !}
+Adapter $n_h$ si $N_h' \neq N_h$ (tailles réelles vs théoriques) :
+\[
+n_{0h}' = \frac{N_h'}{N_h}n_0
+\]
+\end{alertblock}
+\end{frame}
+
+% ==============================================
+\section{7.4 Effet de grappe}
+% ==============================================
+\begin{frame}{7.4 Impact de la corrélation intra-UP}
+\footnotesize
+\textbf{Coefficient de corrélation intra-grappe :}
+\[
+\rho = \frac{\sum_{h=1}^M \sum_{i\neq j}(Y_{hi}-\bar{Y})(Y_{hj}-\bar{Y})}{(N-1)S^2}
+\]
+
+\begin{block}{Effet sur la variance}
+Pour UP de taille constante $N$ et $n$ US/UP :
+\[
+V(\hat{T}) = N^2\frac{S^2}{mn}\left(1 + \rho(n-1)\right)
+\]
+\end{block}
+
+\begin{itemize}
+    \item $\rho > 0$ : Similarité des réponses dans une UP
+    \item \textbf{Deff} = $1 + \rho(n-1)$ : Facteur d'inflation de variance
+\end{itemize}
+
+\begin{exampleblock}{Dimensionnement d'échantillon}
+\[
+n \geq \frac{1.96^2 P(1-P)}{\varepsilon^2(1-t)} \times \text{Deff} \quad (\text{Deff} \approx 1.5 \text{ par défaut})
+\]
+\end{exampleblock}
+\end{frame}
+
+% ==============================================
+\section{7.5 Optimisation budgétaire}
+% ==============================================
+\begin{frame}{7.5 Allocation optimale des ressources}
+\scriptsize
+\textbf{Fonction de coût :} 
+\[
+C_T = c_1m + c_2mn \quad \begin{cases}
+c_1 : \text{Coût fixe/UP} \\
+c_2 : \text{Coût variable/US}
+\end{cases}
+\]
+
+\textbf{Solution optimale :}
+\[
+\bar{n} = \sqrt{\frac{c_1}{c_2} \cdot \frac{1-\rho}{\rho}} \quad ; \quad m = \frac{C_T}{c_1 + c_2\bar{n}}
+\]
+
+\begin{block}{Stratégie pratique}
+\begin{enumerate}
+    \item Estimer $\rho$ via des enquêtes pilotes
+    \item Calculer $\bar{n}$ pour équilibrer variance et coût
+    \item Ajuster $m$ selon le budget disponible
+\end{enumerate}
+\end{block}
+
+\begin{alertblock}{Recommendation}
+Privilégier plus d'UP avec moins d'US/UP quand $\rho$ est élevé.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Synthèse des concepts clés}
+\begin{itemize}
+    \item[$\blacktriangleright$] Hiérarchie UP/US pour contourner l'absence de base de sondage
+    \item[$\blacktriangleright$] Double composante de variance (inter/intra-UP)
+    \item[$\blacktriangleright$] Impact critique de l'effet de grappe ($\rho$)
+    \item[$\blacktriangleright$] Optimisation budget-précision via $\bar{n}$ et $m$
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{block}{Perspective}
+Intégration avec la stratification et les probabilités inégales pour des plans complexes.
+\end{block}
+\end{frame}
+
+\end{document}

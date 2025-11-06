@@ -1,0 +1,568 @@
+%% jambrostyle.sty
+%% ---------------------------------------------------------------------------
+%% Custom Beamer style by Ambrogio Cesa-Bianchi
+%% Version 1.1 — 2025 
+%% ---------------------------------------------------------------------------
+
+
+%=============================================================
+%  PACKAGES
+%=============================================================
+
+%% === Encoding and Fonts ===
+\RequirePackage[utf8]{inputenc}                    % UTF-8 input
+\RequirePackage[T1]{fontenc}                       % T1 font encoding
+\RequirePackage{arevmath}                          % Arev-style math fonts
+\RequirePackage{upgreek}                           % Upright Greek letters
+\RequirePackage{courier}                           % Courier typewriter font
+
+%% === Mathematics ===
+\RequirePackage{amsmath}                           % Math typesetting
+\RequirePackage{amssymb}                           % Extra math symbols
+\RequirePackage{amsfonts}                          % Math fonts
+\RequirePackage{mathtools}                         % Math enhancements
+\RequirePackage{braket}                            % Bra-ket notation
+
+%% === Graphics and Figures ===
+\RequirePackage{graphicx}                          % Include graphics
+\RequirePackage{caption}                           % Custom caption setup
+\RequirePackage{booktabs}                          % Professional-quality tables
+\RequirePackage{colortbl,xcolor}                   % Table/text color
+\RequirePackage{tikz}                              % Drawing with TikZ
+\RequirePackage{pgfpages}                          % Handout layout
+\RequirePackage[absolute,overlay]{textpos}         % Absolute positioning
+\RequirePackage{animate}                           % Animated figures
+
+%% === Tables and Layout ===
+\RequirePackage{tabularx}                          % Flexible-width tables
+\RequirePackage{changepage}                        % Margin adjustments
+\RequirePackage{moresize}                          % Additional font sizes
+\RequirePackage{setspace}                          % Line spacing
+\RequirePackage{eurosym}                           % Euro symbol
+
+%% === Lists, Symbols, and Bullets ===
+\RequirePackage{pifont}                            % Ding symbols
+\RequirePackage{bbding}                            % Additional symbols
+
+%% === Text Highlighting and Notes ===
+\RequirePackage{soul}                              % Text highlighting
+\RequirePackage[bordercolor=white,backgroundcolor=script,linecolor=black]{todonotes} % To-do notes
+\setlength{\marginparwidth}{2cm}                   % Required for todonotes
+
+%% === Verbatim and Code Listings ===
+\RequirePackage{verbatim}                          % Verbatim environment
+\RequirePackage{fancyvrb}                          % Fancy verbatim
+\RequirePackage{newverbs}                          % More verbatim control
+\RequirePackage{listings}                          % Code listing
+\RequirePackage{mdframed}                          % Framed environments
+\RequirePackage{framed}                            % Framed boxes
+
+%% === Document Control and Utilities ===
+\RequirePackage{comment}                           % Block comments
+\RequirePackage{xkeyval}                           % Key-value option handling
+\RequirePackage{hyperref}                          % Hyperlinks
+\RequirePackage{subdepth}                          % Sub/superscript alignment
+
+%% === Bibliography ===
+\RequirePackage{natbib}                            % Bibliography support
+
+
+
+%=============================================================
+%  COLORS
+%=============================================================
+
+%% === Base Color Palette ===
+\definecolor{title}{RGB}{7,40,91}              % Darker blue for titles
+\definecolor{main}{RGB}{57,83,124}             % Dark blue for items and math
+\definecolor{text}{RGB}{0,0,0}                 % Main text color
+\definecolor{light}{RGB}{255,255,255}          % Background white
+\definecolor{bubble}{RGB}{230,233,239}         % Light blue bubble
+\definecolor{hlight}{RGB}{235,203,139}         % Gold highlight (Stabilo)
+\definecolor{carandache}{RGB}{218,165,32}      % Underlining gold
+
+%% === Bank of England Colors ===
+\definecolor{BoEacqua}{RGB}{61,215,217}
+\definecolor{BoEorange}{RGB}{255,114,0}
+\definecolor{BoEpurple}{RGB}{159,112,225}
+\definecolor{BoEgold}{RGB}{213,175,54}
+\definecolor{BoEgray}{RGB}{197,201,207}
+
+%% === Additional Named Colors ===
+\definecolor{tomato}{RGB}{217,83,79}
+\definecolor{cobalt}{RGB}{0,124,146}
+\definecolor{Cobalt_Light}{RGB}{0,154,180}
+\definecolor{Blue_Light}{RGB}{150,180,225}
+\definecolor{note}{RGB}{49,79,179}
+\definecolor{red}{RGB}{153,0,0}
+\definecolor{blue}{RGB}{7,40,91}
+\definecolor{gold}{RGB}{218,165,32}
+\definecolor{green}{RGB}{0,179,0}
+\definecolor{purple}{RGB}{150,40,160}
+\definecolor{brick}{RGB}{203,92,65}
+\definecolor{maroon}{RGB}{128,0,0}
+
+%% === Background and Utility Colors ===
+\definecolor{script}{RGB}{255,248,225}             % Background for code/todos
+\definecolor{shadecolor}{rgb}{1,0.973,0.882}   % Same as script (for listings)
+\definecolor{cmd}{gray}{0.99}                            % Very light gray (verbatim bg)
+
+%% === MATLAB-Themed Colors ===
+\definecolor{matlabgreen}{RGB}{0,153,0}
+\definecolor{matlabpurple}{RGB}{127,0,255}
+\definecolor{matlabblue}{RGB}{0,42,252}
+
+%% === Highlight Variants ===
+\definecolor{hlightPurple}{RGB}{126,100,121}
+\definecolor{hlightYellow}{RGB}{235,203,139}   % Duplicate of hlight for clarity
+
+
+
+%=============================================================
+%  THEME OPTIONS
+%=============================================================
+
+% === Aspect ratio, notes, font and theme options ===
+%-----------------------------------------------------
+\newif\if@OptionFourThree
+\newif\if@OptionShowNotes
+\newif\if@OptionTwopage
+\newif\if@OptionFira
+\newif\if@OptionCabin
+\newif\if@OptionRoboto
+\newif\if@OptionRed
+\newif\if@OptionNight
+\newif\if@Optiononesec
+
+\@OptionFourThreefalse
+\@OptionShowNotesfalse
+\@OptionTwopagefalse
+\@OptionFirafalse
+\@OptionCabinfalse
+\@OptionRobotofalse
+\@OptionRedfalse
+\@OptionNightfalse
+\@Optiononesecfalse
+
+% === Declare all options ===
+\DeclareOption{3to2}{\@OptionFourThreetrue}
+\DeclareOption{shownotes}{\@OptionShowNotestrue}
+\DeclareOption{handout}{\@OptionTwopagetrue}
+\DeclareOption{light}{\@OptionFiratrue}
+\DeclareOption{cabin}{\@OptionCabintrue}
+\DeclareOption{roboto}{\@OptionRobototrue}
+\DeclareOption{red}{\@OptionRedtrue}
+\DeclareOption{night}{\@OptionNighttrue}
+\DeclareOption{onesec}{\@Optiononesectrue}
+
+% === Process all at once ===
+\ProcessOptions\relax
+
+% === Apply aspect ratio ===
+\if@OptionFourThree
+\geometry{paperheight=10cm, paperwidth=15cm}
+\else
+\geometry{paperheight=9cm, paperwidth=16cm}
+\fi
+
+% === Show speaker notes ===
+\if@OptionShowNotes
+\beamer@ignorenonframefalse
+\else
+\beamer@ignorenonframetrue
+\fi
+
+% === Print handout 2x1 layout ===
+\if@OptionTwopage
+\pgfpagesuselayout{2 on 1}[a4paper, border shrink=1mm]
+\pgfpageslogicalpageoptions{1}{border code=\pgfsetlinewidth{2.5pt}\pgfusepath{stroke}}
+\pgfpageslogicalpageoptions{2}{border code=\pgfsetlinewidth{2.5pt}\pgfusepath{stroke}}
+\pgfpageslogicalpageoptions{3}{border code=\pgfsetlinewidth{2.5pt}\pgfusepath{stroke}}
+\pgfpageslogicalpageoptions{4}{border code=\pgfsetlinewidth{2.5pt}\pgfusepath{stroke}}
+\fi
+
+% === Apply fonts ===
+\if@OptionFira
+\RequirePackage[sfdefault,book,light]{FiraSans}
+\renewcommand*\oldstylenums[1]{{\firaoldstyle #1}}
+\else
+\RequirePackage[sfdefault,book]{FiraSans}
+\renewcommand*\oldstylenums[1]{{\firaoldstyle #1}}
+\fi
+
+\if@OptionCabin
+\RequirePackage[sfdefault]{cabin}
+\fi
+
+\if@OptionRoboto
+\RequirePackage[sfdefault,light]{roboto}
+\fi
+
+% === Apply red color scheme ===
+\if@OptionRed
+\definecolor{title}{RGB}{153,0,0}
+\definecolor{main}{RGB}{173,51,51}
+\definecolor{text}{RGB}{0,0,0}
+\definecolor{light}{RGB}{255, 255, 255}
+\definecolor{bubble}{RGB}{245,230,230} 
+\definecolor{hlight}{RGB}{235, 203, 139}
+\definecolor{carandache}{RGB}{153,0,0}
+\fi
+
+% === Apply night color scheme (overrides red) ===
+\if@OptionNight
+\definecolor{title}{RGB}{129, 161, 193}
+\definecolor{main}{RGB}{154, 180, 205}
+\definecolor{text}{RGB}{216, 222, 233} 
+\definecolor{light}{RGB}{46, 52, 64} 
+\definecolor{bubble}{RGB}{67,76,94} 
+\definecolor{hlight}{RGB}{126,100,121}
+\definecolor{carandache}{RGB}{148,111,169}
+\fi
+
+% === Footline Template Selection ===
+\if@Optiononesec
+% Show only current section and frame number
+\defbeamertemplate*{footline}{shadow theme}{%
+    \leavevmode\hbox{%
+        \begin{beamercolorbox}[wd=1.01\paperwidth, ht=2.5ex, dp=1.125ex, leftskip=.3cm plus1fil, rightskip=0.3cm]{author in head/foot}%
+            \insertshorttitle \insertsection \hfill \insertframenumber%
+        \end{beamercolorbox}%
+    }%
+}
+\else
+% Show all sections and frame number
+\defbeamertemplate*{footline}{shadow theme}{%
+    \leavevmode\hbox{%
+        \begin{beamercolorbox}[wd=1.02\paperwidth, ht=2.5ex, dp=1.125ex, leftskip=.3cm plus1fil, rightskip=0.3cm]{author in head/foot}%
+            \insertsectionnavigationhorizontal{.90\textwidth}{}{} \hspace{.3cm} \hfill \# \insertframenumber%
+        \end{beamercolorbox}%
+    }%
+}
+\fi
+% Activate custom footline
+\setbeamertemplate{footline}[shadow theme]
+
+
+
+
+
+%=============================================================
+%  BEAMER CUSTOM
+%=============================================================
+
+%% === Beamer Theme Features ===
+\useinnertheme{rounded}                        % Rounded boxes inside slides
+\setbeamertemplate{navigation symbols}{}       % Hide navigation symbols
+\defbeamertemplate*{headline}{shadow theme}{\leavevmode\hbox{}} % Empty headline
+
+%% === Slide Margins ===
+\setbeamersize{text margin left=0.3cm, text margin right=0.1cm}
+
+%% === Title and Frame Fonts ===
+\setbeamerfont{title}{series=\bfseries, size={\fontsize{18}{19}}}
+\setbeamerfont{frametitle}{series=\bfseries, size={\fontsize{14}{15}}}
+
+%% === Beamer Color Settings ===
+\setbeamertemplate{section in head/foot shaded}[default][30]
+
+% General
+\setbeamercolor{normal text}{fg=text}
+\setbeamercolor{background canvas}{bg=light}
+\setbeamercolor{math text}{fg=title!95}
+
+% Structural elements
+\setbeamercolor{titlelike}{fg=title, bg=light}
+\setbeamercolor{frametitle}{fg=title, bg=light}
+\setbeamercolor{section in head/foot}{fg=light, bg=title}
+\setbeamercolor{author in head/foot}{fg=light, bg=title}
+\setbeamercolor{title in head/foot}{fg=light, bg=title}
+\setbeamercolor{button}{fg=light, bg=main}
+
+% Font styles
+\setbeamerfont{section in head/foot}{series=\bfseries}
+\setbeamerfont{frametitle}{series=\bfseries}
+
+%% === Itemize and Enumerate Templates ===
+% Main bullet style
+\defbeamertemplate{itemize item}{first}{\hand*}
+\setbeamertemplate{itemize items}[triangle]
+
+% Sub-item bullets
+\defbeamertemplate{itemize subitem}{second}{\ssmall\raisebox{.03cm}{\ding{81}}}
+\setbeamertemplate{itemize subitem}[second]
+
+\defbeamertemplate{itemize subsubitem}{third}{\ssmall\raisebox{.03cm}{\ding{59}}}
+\setbeamertemplate{itemize subsubitem}[third]
+
+% Enumerated lists
+\setbeamertemplate{enumerate items}[default]
+
+% Colors for all list levels
+\setbeamercolor{itemize item}{fg=main}
+\setbeamercolor{itemize subitem}{fg=main}
+\setbeamercolor{itemize subsubitem}{fg=main}
+\setbeamercolor{enumerate item}{fg=main}
+\setbeamercolor{enumerate subitem}{fg=main}
+
+
+
+
+%=============================================================
+%  MISCELLANEOUS
+%=============================================================
+
+%% === Notes and Table Formatting ===
+% Define a custom size for figure/table notes
+\let\notesize\footnotesize
+% Increase vertical spacing in tables
+\renewcommand{\arraystretch}{1.15}
+% New centered column types for tabularx
+\newcolumntype{Y}{>{\centering\arraybackslash\leavevmode}X}                             % Regular centered
+\newcolumntype{S}{>{\centering\arraybackslash\leavevmode\color{gray!25}}X}    % Shaded background (light gray)
+
+%% === Margin Environment for Notes or Quotes ===
+% Usage: \begin{changemargin}{left}{right} ... \end{changemargin}
+\newenvironment{changemargin}[2]{%
+    \begin{list}{}{%
+            \setlength{\topsep}{0pt}%
+            \setlength{\leftmargin}{#1}%
+            \setlength{\rightmargin}{#2}%
+            \setlength{\listparindent}{\parindent}%
+            \setlength{\itemindent}{\parindent}%
+            \setlength{\parsep}{\parskip}}%
+        \item[]
+    }{\end{list}}
+
+%% === Common Math and Symbol Shortcuts ===
+\def\EE{\mathbb{E}}                           % Expectation operator
+\def\newblock{\hskip .11em plus .33em minus .07em} % Fixes natbib spacing
+\newcommand{\cmark}{\ding{51}}               % Check mark
+\newcommand{\xmark}{\ding{55}}               % Cross mark
+
+%% === Verbatim Frames and Code Setup ===
+% Custom frame for verbatim (fragile) content
+\newenvironment{xframe}[1][]%
+{\begin{frame}[fragile,environment=xframe,#1]}%
+    {\end{frame}}
+% Style for listings (e.g., \begin{lstlisting})
+\lstset{basicstyle=\ttfamily\color{black!85}}
+% Shortcut for inline code
+\let\code\lstinline
+% Default to inline mode for todonotes
+\presetkeys{todonotes}{inline}{}
+
+%% === Suppress Overfull/Underfull Warnings ===
+\vfuzz2pt
+\hfuzz2pt
+
+%% === Handwriting Font ===
+\DeclareRobustCommand{\hand}{%
+    \fontfamily{augie}\fontseries{b}\fontshape{n}\selectfont
+}
+\DeclareTextFontCommand{\textaugie}{\hand}
+
+%% === Table Symbol Macro (e.g., for Stata output) ===
+\newcommand{\sym}[1]{{#1}}
+
+%% === Table of contents ===
+\makeatletter
+% Section entries: number right-aligned, text in small caps
+\setbeamertemplate{section in toc}{
+    \leavevmode\leftskip=2ex%
+    \usebeamerfont*{section in toc}%
+    \begin{tabular}{@{}p{2em}l}
+        \raggedleft\textcolor{main}{\large \hand*} & \textcolor{black}{{\inserttocsection}}
+    \end{tabular}
+}
+
+% Subsection entries: number right-aligned, text in small caps
+\setbeamertemplate{subsection in toc}{
+    \leavevmode\leftskip=4ex%
+    \usebeamerfont*{subsection in toc}%
+    \begin{tabular}{@{}p{3em}l}
+        \raggedleft\textcolor{main}{[\inserttocsectionnumber.\inserttocsubsectionnumber]} & \textcolor{black}{\textsc{\inserttocsubsection}}
+    \end{tabular}\par
+}
+\makeatother
+
+
+
+%=============================================================
+%  TIKZ
+%=============================================================
+
+%% === TikZ Libraries and Decorations ===
+\usetikzlibrary{
+    calc,
+    positioning,
+    tikzmark,
+    patterns,
+    arrows,
+    decorations,
+    decorations.pathmorphing,
+    decorations.text,
+    decorations.pathreplacing,
+    fit
+}
+\usepgflibrary{shapes.geometric} % legacy shapes lib
+
+%% === Custom TikZ Decoration: Hand-drawn Sketch Line ===
+\makeatletter
+\pgfset{
+    /pgf/decoration/randomness/.initial=2,
+    /pgf/decoration/wavelength/.initial=150
+}
+
+\pgfdeclaredecoration{sketch}{init}{
+    \state{init}[width=0pt,next state=draw,
+    persistent precomputation={\pgfmathsetmacro\pgf@lib@dec@sketch@t0}]{}%
+    \state{draw}[
+    width=\pgfdecorationsegmentlength,
+    auto corner on length=\pgfdecorationsegmentlength,
+    persistent precomputation={
+        \pgfmathsetmacro\pgf@lib@dec@sketch@t{
+            mod(\pgf@lib@dec@sketch@t + pow(\pgfkeysvalueof{/pgf/decoration/randomness}, rand),
+            \pgfkeysvalueof{/pgf/decoration/wavelength})
+        }
+    }]{
+        \pgfmathparse{
+            sin(2*\pgf@lib@dec@sketch@t*pi/\pgfkeysvalueof{/pgf/decoration/wavelength}r)
+        }
+        \pgfpathlineto{
+            \pgfqpoint{\pgfdecorationsegmentlength}{\pgfmathresult\pgfdecorationsegmentamplitude}
+        }
+    }
+    \state{final}{}
+}
+\makeatother
+
+%% === Custom TikZ Styles ===
+\tikzset{
+    pencil/.style={carandache, line width=0.04cm, decorate,
+        decoration={sketch, segment length=1.5pt, amplitude=0.5pt}},
+    nstyle/.style={inner sep=0pt, anchor=base},
+    tstyle/.style={remember picture, baseline},
+    tpstyle/.style={overlay, remember picture},
+    arrow/.style={pencil, carandache, line width=0.04cm},
+    snake/.style={decorate, carandache, line width=0.04cm,
+        decoration={snake, post length=1.5mm, pre length=1.5mm}},
+    pencilboxstyle/.style={pencil,draw,line width=0.04cm,inner xsep=0.5pt,inner ysep=0.5pt,baseline}    
+}
+
+
+
+%=============================================================
+%  CUSTOM COMMANDS
+%=============================================================
+
+% === Underlining: \lapis command ===
+% Usage: \lapis{word} or \lapis[red]{word}
+% Draws a hand-drawn underline using TikZ (default: pencil style)
+\newcommand{\lapis}[2][]{%
+    \def\FirstArg{#1}%
+    \ifx\FirstArg\empty
+    % No optional color/style
+    \tikz[tstyle]{\node[nstyle](node1){#2}}%
+    \begin{tikzpicture}[tpstyle]
+        \draw[pencil,very thick] ([yshift=-2pt]node1.south west) to ([yshift=-2pt]node1.south east);
+    \end{tikzpicture}%
+    \hspace{-0.05cm}%
+    \else
+    % With optional style/color (e.g., [red], [snake])
+    \tikz[tstyle]{\node[nstyle](node1){#2}}%
+    \begin{tikzpicture}[tpstyle]
+        \draw[pencil,very thick,#1] ([yshift=-2pt]node1.south west) to ([yshift=-2pt]node1.south east);
+    \end{tikzpicture}%
+    \hspace{-0.05cm}%
+    \fi
+}
+
+% === Highlighting: \stabilo command ===
+% Usage: \stabilo{word} or \stabilo[yellow]{word}
+% Applies color highlight using soul and hlight (default: hlight)
+\makeatletter
+\let\HL\hl
+\renewcommand\hl{%
+    \let\set@color\beamerorig@set@color
+    \let\reset@color\beamerorig@reset@color
+    \HL}
+\makeatother
+
+\newcommand{\stabilo}[2][hlight]{%
+    {\sethlcolor{#1}\hl{#2}}%
+}
+
+% === Framing: \lapisbox command ===
+% Usage: \lapisbox{word} or \lapisbox[label=foo,color=red]{word}
+% Draws a hand-drawn box around text using TikZ (default: pencil style)
+\makeatletter
+% Define keys for pencilbox options
+\pgfkeys{
+    /pencilbox/.is family, /pencilbox,
+    label/.estore in=\lapisbox@label,
+    color/.estore in=\lapisbox@color,
+}
+% Default values
+\def\lapisbox@label{}
+\def\lapisbox@color{gold}
+\newcommand{\lapisbox}[2][]{%
+    % Parse key-value options
+    \pgfkeys{/pencilbox, #1}%
+    \tikzset{
+        pencilboxstyle/.style={
+            pencil,
+            draw,
+            \lapisbox@color!80,
+            line width=0.04cm,
+            fill=yellow!0,
+            inner xsep=1.2pt,
+            inner ysep=1.4pt,
+            baseline
+        }
+    }%
+    \hspace{-0.1cm}%
+    \raisebox{0pt}[0pt][0pt]{%
+            \ifx\lapisbox@label\@empty
+            \tikz[baseline=(X.base), remember picture]{%
+                \node[pencilboxstyle, text=.] (X) {\strut #2};
+            }
+            \else
+            \tikz[baseline=(\lapisbox@label.base), remember picture]{%
+                \node[pencilboxstyle, text=.=] (\lapisbox@label) {\strut #2};
+            }
+            \fi
+        }%
+    \hspace{-0.1cm}%
+}
+\makeatother
+
+% === TikZ anchor node ===
+% Usage: \marker{name}{content}
+% Creates a styled TikZ node with name `name` and content `content`
+\newcommand{\marker}[2]{%
+    \tikz[remember picture, baseline=(#1.base)]{%
+        \node[nstyle, name=#1] (#1) {\strut #2};%
+    }%
+}
+
+% === Inline Bubble Notes ===
+% Usage: \NB{your comment}
+% Creates an inline to-do bubble using defined bubble and text colors
+\newcommand{\NB}[1]{%
+    \todo[textcolor=text, color=bubble, inline, caption={}]{#1}%
+}
+
+% === Font Size: Minuscule ===
+% Usage: {\miniscule Your tiny text}
+% Defines a font size smaller than \tiny
+\makeatletter
+\newcommand{\miniscule}{\@setfontsize\miniscule{4}{6}} % \tiny is 5pt/6pt
+\makeatother
+
+% === Font Size: Tables ===
+% Usage: {\tablesize Table content}
+% Defines a smaller font size for dense table content
+\makeatletter
+\newcommand*\tablesize{\@setfontsize\tablesize{7.25}{8.0}}
+\makeatother

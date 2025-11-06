@@ -1,0 +1,139 @@
+\documentclass[12pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usetheme{jambro}
+
+\title[STT 504 Sondage]{Sondage stratifié}
+\author{FM, Université Soumaré}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Sommaire}
+\tableofcontents
+\end{frame}
+
+\section{5.1 Principe et justification}
+\begin{frame}{5.1 Principe et justification}
+\begin{itemize}
+    \item Problème du SAS : inefficace si population hétérogène.
+    \item Solution : \textbf{stratification} en sous-ensembles homogènes (strates).
+    \item Avantages :
+    \begin{itemize}
+        \item Augmentation de la précision globale.
+        \item Comparaisons inter-strates.
+        \item Méthodes d'estimation adaptatives (ex: populations nomades/sédentaires).
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{5.2 Description et notations}
+\begin{frame}{5.2 Description et notations}
+\textbf{Population :}
+\begin{itemize}
+    \item Taille totale : $N$
+    \item H strates de tailles $N_1, N_2, \dots, N_H$ avec $\sum_{h=1}^H N_h = N$
+\end{itemize}
+
+\textbf{Échantillon :}
+\begin{itemize}
+    \item Taille $n_h$ dans la strate $h$ ($\sum_{h=1}^H n_h = n$)
+    \item Taux de sondage : $f_h = \frac{n_h}{N_h}$, $f = \frac{n}{N}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Décomposition de la variance}
+Pour $N_h$ grand :
+\[
+S^2 \approx \underbrace{\sum_{h=1}^H \frac{N_h}{N} S_h^2}_{\text{Dispersion intra-strate}} + \underbrace{\sum_{h=1}^H \frac{N_h}{N} (\bar{Y}_h - \bar{Y})^2}_{\text{Dispersion inter-strate}}
+\]
+\begin{exampleblock}{Important}
+La variance totale dépend de l'hétérogénéité \textbf{intra} et \textbf{inter} strates.
+\end{exampleblock}
+\end{frame}
+
+\section{5.3 Estimation}
+\begin{frame}{5.3 Estimateurs sans biais}
+\begin{itemize}
+    \item Moyenne par strate : $\bar{y}_h = \frac{1}{n_h} \sum_{i=1}^{n_h} y_{hi}$
+    \item Moyenne globale : 
+    \[
+    \hat{\bar{Y}} = \frac{1}{N} \sum_{h=1}^H N_h \bar{y}_h
+    \]
+    \item Total global : $\hat{Y} = N\hat{\bar{Y}}$
+\end{itemize}
+\begin{block}{Preuve (sans biais)}
+\[
+E(\hat{\bar{Y}}) = \frac{1}{N} \sum_{h=1}^H N_h E(\bar{y}_h) = \bar{Y}
+\]
+\end{block}
+\end{frame}
+
+\section{5.4 Calcul de précision}
+\begin{frame}{5.4 Variance de l'estimateur}
+\[
+V(\hat{\bar{Y}}) = \sum_{h=1}^H \left(\frac{N_h}{N}\right)^2 \left(1 - \frac{n_h}{N_h}\right) \frac{S_h^2}{n_h}
+\]
+\vspace{0.5cm}
+\textbf{Intervalle de confiance :}
+\[
+\left[ \hat{\bar{Y}} \pm u_{1-\alpha/2} \sqrt{\hat{V}(\hat{\bar{Y}})} \right]
+\]
+\end{frame}
+
+\section{5.5 Taille de l'échantillon}
+\begin{frame}{5.5.1 Allocation proportionnelle}
+\begin{itemize}
+    \item Taux de sondage uniforme : $n_h = \frac{n}{N} N_h$
+    \item Estimateur auto-pondéré : $\hat{\bar{Y}} = \bar{y}$
+    \item Variance simplifiée :
+    \[
+    V(\hat{\bar{Y}}) = \frac{1}{n}\left(1 - \frac{n}{N}\right) \sum_{h=1}^H \frac{N_h}{N} S_h^2
+    \]
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5.5.2 Répartition de Neyman}
+\begin{itemize}
+    \item Allocation selon la dispersion : 
+    \[
+    n_h \propto N_h S_h
+    \]
+    \item Optimal pour minimiser la variance (strates hétérogènes $\rightarrow$ plus grandes tailles).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5.5.3 Allocation optimale sous contrainte de coût}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\[
+\begin{cases}
+\min \sum_{h=1}^H \left(\frac{N_h}{N}\right)^2 \frac{S_h^2}{n_h} \\
+CV = \sum_{h=1}^H c_h n_h
+\end{cases}
+\]
+Solution :
+\[
+n_h = \frac{N_h S_h / \sqrt{c_h}}{\sum_{h=1}^H N_h S_h / \sqrt{c_h}} \cdot CV
+\]
+\end{column}
+\begin{column}{0.4\textwidth}
+\begin{exampleblock}{}
+Priorise les strates :
+\begin{itemize}
+    \item Hétérogènes ($S_h \uparrow$)
+    \item Peu coûteuses ($c_h \downarrow$)
+\end{itemize}
+\end{exampleblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+\end{document}

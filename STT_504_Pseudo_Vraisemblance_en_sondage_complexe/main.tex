@@ -1,0 +1,139 @@
+\documentclass[11pt]{beamer}
+\usetheme{jambro}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\title{Pseudo‑vraisemblance pour plans de sondage complexes}
+\author{FM}
+\institute{Université Soumaré}
+\date{\today}
+
+\begin{document}
+
+%--- Page de titre ---
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%--- 1. Vraisemblance normale et pseudo‑vraisemblance ---
+\begin{frame}[fragile]{1. Vraisemblance normale et pseudo‑vraisemblance}
+  \begin{itemize}
+    \item Modèle linéaire gaussien : $y_i = x_i'\beta + \varepsilon_i$, avec $\varepsilon_i \sim N(0, \sigma^2)$.
+    \item **Log‑vraisemblance** :
+      \(\ell(\beta,\sigma^2) = -\tfrac{n}{2}\log(2\pi\sigma^2) - \tfrac{1}{2\sigma^2}\sum_{i=1}^n (y_i - x_i'\beta)^2\).
+    \item **Log‑pseudo‑vraisemblance** :
+      \(\ell_{\mathrm{PL}}(\theta) = \sum_{i=1}^n w_i \log L(\theta; y_i)\) (pondération par les poids d’échantillonnage).
+    \item **R (MLE & WLS)** :
+      \begin{verbatim}
+lm(y ~ x1 + x2, data = dat)                       % MLE classique
+lm(y ~ x1 + x2, data = dat, weights = w)       % WLS ⇔ normal likelihood pondérée
+      \end{verbatim}
+    \item **Stata (MLE & WLS)** :
+      \begin{verbatim}
+regress y x1 x2                     // MLE classique
+regress y x1 x2 [pw = w]           // WLS avec poids d’échantillonnage
+      \end{verbatim}
+  \end{itemize}
+\end{frame}
+
+%--- 2. Définition et motivation ---
+\begin{frame}{2. Définition et motivation}
+  \begin{itemize}
+    \item **Log‑pseudo‑vraisemblance** : $\ell_{\mathrm{PL}}(\theta) = \sum_{i=1}^n w_i \log L(\theta; y_i)$.
+    \item Intègre les poids d’échantillonnage pour corriger le biais.  
+    \item Distinction avec le MLE classique sous iid.
+  \end{itemize}
+\end{frame}
+
+%--- 3. Propriétés asymptotiques ---
+\begin{frame}{3. Propriétés asymptotiques}
+  \begin{itemize}
+    \item **Design‑consistance** : $\hat\theta_{\mathrm{PL}} \xrightarrow{p} \theta_0$ sous conditions standards.
+    \item **Normalité asymptotique** : $\sqrt{n}(\hat\theta_{\mathrm{PL}} - \theta_0) \overset{d}{\to} N(0, V)$.
+    \item Variance estimée par Taylor ou méthodes de réplication adaptées.
+  \end{itemize}
+\end{frame}
+
+%--- 4. Implémentation algorithmique ---
+\begin{frame}[fragile]{4. Implémentation algorithmique}
+  \begin{itemize}
+    \item **IRLS pondéré** et **Newton–Raphson** appliqués à $\ell_{\mathrm{PL}}$.
+    \item **R (survey)** :
+      \begin{verbatim}
+library(survey)
+design <- svydesign(ids = ~psu, strata = ~strata, weights = ~w, data = dat)
+fit_pl <- svyglm(y ~ x1 + x2, design = design, family = gaussian())
+      \end{verbatim}
+    \item **Stata (survey)** :
+      \begin{verbatim}
+svyset psu [pw = w], strata(strata)
+svy: regress y x1 x2
+      \end{verbatim}
+  \end{itemize}
+\end{frame}
+
+%--- 5. Diagnostics et sélection de modèles ---
+\begin{frame}{5. Diagnostics et sélection de modèles}
+  \begin{itemize}
+    \item **Résidus pondérés** : linéarité, homogénéité et test d’ignorableité des poids.
+    \item **Critères pseudo‑AIC/BIC** : adaptations valides pour plans de sondage (Lumley & Scott, 2015).
+  \end{itemize}
+\end{frame}
+
+%--- 6. Extensions avancées ---
+\begin{frame}{6. Extensions avancées}
+  \begin{itemize}
+    \item **Quasi‑likelihood** et **Empirical Likelihood** : estimation non‑paramétrique sous contraintes.
+    \item **Small Area Estimation** : modèle Fay–Herriot pour area‑level.
+  \end{itemize}
+\end{frame}
+
+%--- 7. Exemples de code R et Stata ---
+\begin{frame}[fragile]{7. Exemples de code R et Stata}
+  \textbf{R (survey)}:
+  \begin{verbatim}
+# Normal MLE vs PL
+lm(y ~ x1 + x2, data = dat)
+lm(y ~ x1 + x2, data = dat, weights = w)
+# Pseudo-vraisemblance
+fit_pl <- svyglm(y ~ x1 + x2, design = design, family = gaussian())
+  \end{verbatim}
+  \vspace{0.5em}
+  \textbf{Stata}:
+  \begin{verbatim}
+// Normal MLE vs WLS
+regress y x1 x2
+regress y x1 x2 [pw = w]
+// Pseudo-vraisemblance
+svy: regress y x1 x2
+  \end{verbatim}
+\end{frame}
+
+%--- 8. Bibliographie complète ---
+\begin{frame}[allowframebreaks]{8. Bibliographie}
+  \bibliographystyle{apalike}
+  \begin{thebibliography}{99}
+    \bibitem[Binder(1983)]{binder83}
+      Binder, D. A. (1983). On the variances of asymptotically normal estimators from complex surveys. \emph{International Statistical Review}, 51, 279–292.
+    \bibitem[Pfeffermann(1993)]{pfeffermann93}
+      Pfeffermann, D. (1993). The role of sampling weights when modeling survey data. \emph{International Statistical Review}, 61(2), 317–337.
+    \bibitem[Lumley(2004)]{lumley04}
+      Lumley, T. (2004). \emph{Complex Surveys: A Guide to Analysis Using R}. Wiley.
+    \bibitem[Särndal et~al.(1992)]{sarnal92}
+      Särndal, C.-E., Swensson, B., & Wretman, J. (1992). \emph{Model Assisted Survey Sampling}. Springer.
+    \bibitem[Skinner et~al.(1989)]{skinner89}
+      Skinner, C. J., Holt, D., & Smith, T. M. F. (1989). \emph{Analysis of Complex Surveys}. Wiley.
+    \bibitem[Korn & Graubard(1999)]{korn99}
+      Korn, E. L., & Graubard, B. I. (1999). \emph{Analysis of Health Surveys}. Wiley.
+    \bibitem[Chen & Sitter(1999)]{chen99}
+      Chen, J., & Sitter, R. R. (1999). A pseudo empirical likelihood approach in complex surveys.
+    \bibitem[Lumley & Scott(2015)]{lumley15}
+      Lumley, T., & Scott, A. (2015). AIC and BIC for modeling with complex survey data. \emph{Journal of Survey Statistics and Methodology}.
+    \bibitem[Asparouhov & Muthén(2007)]{asparouhov07}
+      Asparouhov, T., & Muthén, B. (2007). Testing for informative weights.
+    \bibitem[StatCan(2013)]{statcan13}
+      Statistique Canada. Survey-weighted BIC criterion.
+  \end{thebibliography}
+\end{frame}
+
+\end{document}

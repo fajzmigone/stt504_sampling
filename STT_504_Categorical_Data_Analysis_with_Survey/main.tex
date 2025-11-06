@@ -1,0 +1,507 @@
+\documentclass{beamer}
+\usetheme{jambro}
+\usepackage[utf8]{inputenc} % Recommended for accents
+\usepackage[T1]{fontenc}    % Recommended for font encoding
+% Pour une meilleure typographie française (dates, césures, etc.), décommentez la ligne suivante :
+% \usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+
+\title{Analyse de Données Catégorielles dans les Enquêtes Complexes}
+\subtitle{Effets du Plan de Sondage sur les Tests du Chi-Carré et les Intervalles de Confiance}
+\author[FM]{FM \\ \small} % Placeholders
+\date{\today}
+\institute[Université Soumaré]{Université Soumaré} % Placeholder
+
+\begin{document}
+
+\frame{\titlepage}
+
+% Introduction
+\section{Introduction}
+\begin{frame}{Introduction}
+\frametitle{Objectifs et Sujets Clés}
+\begin{block}{Objectifs}
+\begin{itemize}
+\item Comprendre l'impact des plans de sondage complexes sur l'analyse de données catégorielles
+\item Apprendre les procédures correctes pour les tests du chi-carré dans les enquêtes complexes
+\item Reconnaître les conséquences de l'ignorance du plan de sondage
+\end{itemize}
+\end{block}
+
+\begin{block}{Sujets Clés}
+\begin{itemize}
+\item Revue des tests du chi-carré sous échantillonnage aléatoire simple (SAS)
+\item Effets de la stratification et de l'échantillonnage en grappes
+\item Estimation pondérée dans les tableaux de contingence
+\item Implications pratiques et études de cas
+\end{itemize}
+\end{block}
+\end{frame}
+
+% Contexte Théorique
+\section{Contexte Théorique}
+\begin{frame}{Tests du Chi-Carré sous SAS}
+\frametitle{Cadre d'Échantillonnage Multinomial}
+\begin{itemize}
+\item \textbf{Hypothèses}:
+\begin{itemize}
+\item Observations indépendantes
+\item Grande taille d'échantillon ($n \geq 5 \times$ nombre de cellules)
+\item Effectifs attendus par cellule $> 1$
+\end{itemize}
+
+\item \textbf{Tests Courants}:
+\begin{itemize}
+\item Test d'indépendance : $H_0: p_{ij} = p_{i+}p_{+j}$
+\item Test d'homogénéité : $H_0: p_{1j} = p_{2j} = \cdots = p_{rj}$
+\item Test d'ajustement : $H_0: p_i = p_i^{(0)}$
+\end{itemize}
+\end{itemize}
+
+\begin{exampleblock}{Exemple 10.1}
+500 couples mariés interrogés sur la possession d'ordinateur et l'abonnement au câble :
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+ & Ordinateur Oui & Ordinateur Non \\
+\midrule
+Câble Oui & 119 & 188 \\
+Câble Non & 88 & 105 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{exampleblock}
+\end{frame}
+
+% Statistiques de Test
+\begin{frame}{Statistiques de Test}
+\frametitle{Statistiques de Pearson et du Rapport de Vraisemblance}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{$X^2$ de Pearson}:
+\[ X^2 = \sum_{i=1}^r \sum_{j=1}^c \frac{(O_{ij} - E_{ij})^2}{E_{ij}} \]
+où :
+\begin{itemize}
+\item $O_{ij}$ = effectif observé
+\item $E_{ij} = n\hat{p}_{i+}\hat{p}_{+j}$
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Rapport de Vraisemblance $G^2$}:
+\[ G^2 = 2\sum_{i=1}^r \sum_{j=1}^c O_{ij} \ln\left(\frac{O_{ij}}{E_{ij}}\right) \]
+\end{column}
+\end{columns}
+
+\begin{block}{Résultats de l'Exemple}
+\begin{itemize}
+\item $X^2 = 2.281$, $G^2 = 2.275$
+\item $p$-valeur = 0.13 (non-rejet de $H_0$)
+\item Rapport de cotes = 0.755 (IC 95\% inclut 1)
+\end{itemize}
+\end{block}
+\end{frame}
+
+% Effets du Plan de Sondage
+\section{Effets du Plan de Sondage}
+\begin{frame}{Effets de l'Échantillonnage en Grappes}
+\frametitle{Impact de la Corrélation Intra-Classe (CIC)}
+\begin{itemize}
+\item \textbf{Problème}: CIC positive $\Rightarrow$ observations dépendantes
+\item \textbf{Conséquence}: Statistiques de test gonflées par l'effet du plan de sondage (deff)
+\[ \text{deff} = 1 + (m - 1)\rho \]
+où $m$ = taille de grappe, $\rho$ = CIC
+\end{itemize}
+
+\begin{exampleblock}{Exemple 10.4}
+\begin{itemize}
+\item Paires mari-femme (CIC = 1)
+\item Ignorer l'effet de grappe double les statistiques de test :
+\begin{itemize}
+\item $X^2$ augmente de 2.281 à 4.562
+\item $p$-valeur incorrecte = 0.033 (Erreur de type I)
+\end{itemize}
+\end{itemize}
+\end{exampleblock}
+
+\begin{alertblock}{Point Clé}
+La vraie distribution sous $H_0$ est $X^2/\text{deff} \sim \chi^2$
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Effets de la Stratification}
+\frametitle{Gains de Précision et Tests Conservateurs}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item \textbf{Avantage}: Précision accrue (deff < 1)
+\item \textbf{Impact sur le Test}:
+\begin{itemize}
+\item Les $p$-valeurs basées sur l'SAS deviennent conservatives
+\item $\alpha$ réel < $\alpha$ nominal
+\end{itemize}
+\item \textbf{Exemple}: Analyse NCVS
+\begin{itemize}
+\item $p$-valeur rapportée : 0.04
+\item $p$-valeur réelle : 0.02
+\end{itemize}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{center}
+% Le nom du fichier image reste inchangé
+\includegraphics[width=\textwidth]{stratification_effect.png}
+\end{center}
+\end{column}
+\end{columns}
+
+\begin{block}{Recommandation}
+\begin{itemize}
+\item Pour une inférence valide, incorporer la stratification dans l'analyse
+\item Utiliser des logiciels spécialisés (ex: SUDAAN, package R \texttt{survey})
+\end{itemize}
+\end{block}
+\end{frame}
+
+% Analyse Pondérée
+\section{Analyse Pondérée}
+\begin{frame}{Estimation Pondérée}
+\frametitle{Tableaux de Contingence dans les Enquêtes Complexes}
+\begin{block}{Estimateur de Proportion Pondéré}
+\[ \hat{p}_{ij} = \frac{\sum_{k \in S} w_k y_{kij}}{\sum_{k \in S} w_k} \]
+où :
+\begin{itemize}
+\item $w_k$ = poids de sondage
+\item $y_{kij} = \mathbb{I}\{\text{unité } k \text{ dans cellule } (i,j)\}$
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Considérations Pratiques}
+\begin{itemize}
+\item Comparer les rapports de cotes pondérés vs. non pondérés
+\item Investiguer les divergences (peuvent indiquer des effets du plan)
+\item Utiliser la linéarisation de Taylor ou des méthodes de réplication pour l'estimation de variance
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% Implications Pratiques
+\section{Implications Pratiques}
+\begin{frame}{Conséquences de l'Ignorance du Plan}
+\frametitle{Impact dans le Monde Réel}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{block}{Faux Positifs}
+\begin{itemize}
+\item Ajustements inutiles d'évaluation du corps professoral
+\item Adoption de traitements médicaux inefficaces
+\item Programmes sociaux mal alloués
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\begin{block}{Faux Négatifs}
+\begin{itemize}
+\item Associations manquées en santé publique
+\item Inégalités sociales non détectées
+\item Décisions politiques inefficaces
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+
+\begin{alertblock}{Preuves Empiriques}
+\begin{itemize}
+\item Holt et al. (1980) : $\alpha$ réel variait de 0.05 à 0.50
+\item Fay (1985) : "Résultats extrêmement erronés" avec les méthodes SAS
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\section{Problématique}
+\begin{frame}{Problèmes des tests standards}
+\begin{alertblock}{Enjeux des enquêtes complexes}
+\begin{itemize}
+\item \textbf{Clusters} : Dépendance entre observations (ex: ménages, classes)
+\item \textbf{Plan de sondage} : Pondérations et effets de stratification
+\item \textbf{Logiciels standards} : Sous-estiment la variance (ex: SAS, SPSS)
+\end{itemize}
+\end{alertblock}
+
+\begin{exampleblock}{Conséquences}
+\begin{itemize}
+\item Risque accru d'erreurs de type I (faux positifs)
+\item Exemple : $p$-valeurs de 0.03 (SAS) vs 0.25 (réel)
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% Méthode de Wald
+\section{Méthode de Wald}
+\begin{frame}{Test de Wald pour l'indépendance}
+\begin{block}{Formulation}
+Pour une table $2 \times 2$ :
+\[
+\theta = p_{11}p_{22} - p_{12}p_{21}
+\]
+Estimateur :
+\[
+\hat{\theta} = \hat{p}_{11}\hat{p}_{22} - \hat{p}_{12}\hat{p}_{21}
+\]
+Statistique de test :
+\[
+X_W^2 = \frac{\hat{\theta}^2}{\widehat{Var}(\hat{\theta})} \sim \chi^2_1
+\]
+\end{block}
+
+\begin{exampleblock}{Enquête sur les jeunes détenus (n=2,588)}
+\begin{itemize}
+\item SAS : $X^2=11.6$ ($p<0.001$)
+\item Méthode des groupes aléatoires : $X_W^2=0.89$ ($p=0.40$)
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% Test de Bonferroni
+\section{Test de Bonferroni}
+\begin{frame}{Approche de Bonferroni}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item Décomposition de $H_0$ en $m$ sous-hypothèses
+\item Ajustement du seuil : $\alpha^* = \alpha/m$
+\item Comparaison avec une distribution $t$ :
+\[
+\frac{|\hat{\theta}_{ij}|}{\sqrt{\widehat{Var}(\hat{\theta}_{ij})}} > t_{\kappa}(\alpha/2m)
+\]
+\end{itemize}
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{exampleblock}{Exemple Âge/Infraction violente}
+\begin{tabular}{ccc}
+\toprule
+ & $\hat{\theta}_{11}$ & $\hat{\theta}_{12}$ \\
+\midrule
+Valeur & 0.013 & 0.0119 \\
+SE & 0.0074 & 0.0035 \\
+$t$ & 1.8 & 3.4 \\
+\bottomrule
+\end{tabular}
+\end{exampleblock}
+\end{column}
+\end{columns}
+
+\begin{alertblock}{Avantages/limites}
+\begin{itemize}
+\item Simple à mettre en œuvre
+\item Conservateur (risque $\alpha$ contrôlé)
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+% Corrections des moments
+\section{Corrections des moments}
+\begin{frame}{Ajustement par les moments}
+\begin{block}{Correction de premier ordre (Rao-Scott)}
+\[
+X_F^2 = \frac{(r-1)(c-1)X^2}{E[X^2]}
+\]
+où $E[X^2] \approx \sum (1-p_{ij})d_{ij} - ...$
+\end{block}
+
+\begin{exampleblock}{Application (Exemple 10.7)}
+\begin{itemize}
+\item $X^2=34$, $E[X^2]=4.2$
+\item $X_F^2 = \frac{2 \times 34}{4.2} = 16.2$
+\item Comparaison avec $F_{2,12}$ : $p=0.006$
+\end{itemize}
+\end{exampleblock}
+
+\begin{block}{Correction de second ordre}
+\[
+X_S^2 = \frac{\nu X_F^2}{(r-1)(c-1)} \sim \chi^2_\nu
+\]
+Ajuste aussi la variance (plus précis mais complexe)
+\end{block}
+\end{frame}
+
+% Méthodes basées sur modèles
+\section{Approches modélisées}
+\begin{frame}{Modélisation de la dépendance}
+\begin{exampleblock}{Exemple des paires de siblings (Cohen 1976)}
+\begin{tabular}{lcc}
+\toprule
+ & Schizophrène (S) & Non (N) \\
+\midrule
+Hommes & 43 & 15 \\
+Femmes & 32 & 52 \\
+\bottomrule
+\end{tabular}
+
+Modèle avec effet cluster :
+\[
+q_{ij} = 
+\begin{cases} 
+\alpha q_i + (1-\alpha)q_i^2 & i=j \\
+(1-\alpha)q_i q_j & i\neq j 
+\end{cases}
+\]
+\end{exampleblock}
+
+\begin{alertblock}{Avantages}
+\begin{itemize}
+\item Capture la dépendance intra-cluster
+\item Permet une estimation réaliste des $p$-valeurs
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+% Conclusion
+\section{Conclusion}
+\begin{frame}{Recommandations pratiques}
+\begin{block}{Bonnes pratiques}
+\begin{itemize}
+\item Toujours estimer les effets de plan (deff)
+\item Préférer les méthodes de rééchantillonnage (bootstrap, jackknife)
+\item Utiliser des logiciels spécialisés : R \texttt{survey}, SAS \texttt{PROC SURVEYFREQ}
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Résumé des méthodes}
+\begin{tabular}{lp{5cm}}
+\toprule
+Méthode & Utilisation \\
+\midrule
+Wald & Tables petites, variance stable \\
+Bonferroni & Analyses exploratoires \\
+Rao-Scott & Données publiées, deff disponibles \\
+Modèles & Structure cluster connue \\
+\bottomrule
+\end{tabular}
+\end{exampleblock}
+\end{frame}
+
+
+\section{Modèles log-linéaires}
+\begin{frame}{Modèle d'indépendance}
+Pour un tableau \( r \times c \), sous indépendance :
+\[
+\ln(p_{ij}) = \mu + \alpha_i + \beta_j \quad \text{avec } \sum \alpha_i = \sum \beta_j = 0
+\]
+\vspace{0.5cm}
+\begin{exampleblock}{Exemple : Cable vs Ordinateur}
+\begin{table}
+\centering
+\begin{tabular}{lcc|c}
+ & Oui & Non & Total \\ 
+\hline 
+Cable : Oui & 0.254 & 0.360 & 0.614 \\ 
+Non & 0.160 & 0.226 & 0.386 \\ 
+\hline 
+Total & 0.414 & 0.586 & 1.000 \\ 
+\end{tabular}
+\end{table}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Modèle saturé et tests}
+\[
+\ln(p_{ijk}) = \mu + \alpha_i + \beta_j + \gamma_k + (\alpha\beta)_{ij} + \dots + (\alpha\beta\gamma)_{ijk}
+\]
+\begin{itemize}
+    \item Test d'adéquation : Comparaison via \( X^2 \) ou \( G^2 \).
+    \item Enquêtes complexes : Correction des erreurs standards par méthodes de rééchantillonnage (ex: groupes aléatoires).
+\end{itemize}
+
+\begin{alertblock}{Attention}
+Les logiciels standards (ex: SAS) sous-estiment les variances. Utiliser des packages spécialisés (SUDAAN, WesVarPC).
+\end{alertblock}
+\end{frame}
+
+%------------------ Section 4: Étude de cas ------------------
+\section{Étude de cas : Enquête sur les jeunes détenus}
+\begin{frame}{Données et modèle}
+Variables : Âge, Antécédents familiaux (FAMTIME), Violence (EVERVIOL).
+\begin{table}
+\centering
+\begin{tabular}{lcccc}
+ & \multicolumn{2}{c}{FAMTIME=Non} & \multicolumn{2}{c}{FAMTIME=Oui} \\ 
+Âge & Non & Oui & Non & Oui \\ 
+\hline 
+≤15 & 0.0588 & 0.0698 & 0.0659 & 0.0856 \\ 
+16–17 & 0.0904 & 0.1237 & 0.0944 & 0.1375 \\ 
+≥18 & 0.0435 & 0.0962 & 0.0355 & 0.0986 \\ 
+\end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}{Résultats}
+\begin{itemize}
+    \item Test de Bonferroni pour les interactions :
+    \[
+    H_0 : \beta_4 = \beta_5 = \dots = \beta_{11} = 0
+    \]
+    \item Niveau de signification ajusté : \( \alpha/7 = 0.007 \).
+    \item Aucune interaction significative, mais effet marginal pour \textit{âge*famtime}.
+\end{itemize}
+\vspace{0.5cm}
+\includegraphics[width=0.4\textwidth]{interaction_plot}  % Remplacez par une figure appropriée
+\end{frame}
+% Conclusion
+\section{Conclusion}
+\begin{frame}{Résumé et Recommandations}
+\frametitle{Points Essentiels à Retenir}
+\begin{block}{Points Essentiels}
+\begin{itemize}
+\item Le plan de sondage affecte à la fois les estimations ponctuelles et l'inférence
+\item L'échantillonnage en grappes nécessite typiquement un ajustement (deff > 1)
+\item La stratification améliore généralement la précision (deff < 1)
+\end{itemize}
+\end{block}
+\begin{block}{Meilleures Pratiques}
+\begin{itemize}
+\item Toujours incorporer les poids de sondage
+\item Utiliser une estimation de variance appropriée au plan
+\item Vérifier l'analyse avec des logiciels spécialisés
+\end{itemize}
+\end{block}
+\end{frame}
+% Références
+\begin{frame}{Références}
+
+
+\frametitle{Lectures Recommandées}
+% Les détails des références restent dans leur langue originale
+\begin{thebibliography}{9}
+
+\item Rao, J.N.K. \& Scott, A.J. (1984). "On Chi-squared Tests for Multiway Contingency Tables"
+\item Cohen, J.E. (1976). "The Distribution of the Chi-squared Statistic Under Clustered Sampling"
+
+\bibitem{Lohr}
+Lohr, S. (2022).
+\textit{Sampling: Design and Analysis}.
+Cengage Learning.
+
+\bibitem{Agresti}
+Agresti, A. (2013).
+\textit{Categorical Data Analysis}.
+Wiley.
+
+\bibitem{Holt}
+Holt, D., Scott, A. J., \& Ewings, P. D. (1980).
+Chi-squared tests with survey data.
+\textit{Journal of the Royal Statistical Society: Series A}, 143(3), 302-320.
+\end{thebibliography}
+
+\begin{center}
+\Large Questions ?
+\end{center}
+\end{frame}
+
+\end{document}

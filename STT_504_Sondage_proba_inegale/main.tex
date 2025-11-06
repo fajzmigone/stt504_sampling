@@ -1,0 +1,239 @@
+\documentclass[12pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath,amssymb,tabularx}
+\usepackage{graphicx}
+\usetheme{jambro}
+
+\title[STT 504: Sondage à probabilités inégales]{STT 504 : Sondage à probabilités inégales}
+\author{FM, Université Soumaré}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Sommaire}
+\tableofcontents
+\end{frame}
+
+% ==============================================
+\section{6.1 Principe et justification}
+% ==============================================
+\begin{frame}{6.1 Contexte et motivation}
+\small
+Le sondage aléatoire simple (SAS) suppose une probabilité égale pour toutes les unités. Cette approche devient sous-optimale lorsque :
+\begin{itemize}
+    \item La population présente une hétérogénéité marquée
+    \item Des informations auxiliaires (ex : taille des exploitations) sont disponibles
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Exemple concret :} 
+\begin{itemize}
+    \item Enquête agricole : Les grandes exploitations contribuent davantage à la production totale. 
+    \item Stratégie : Attribuer une probabilité d'inclusion $\pi_\alpha \propto$ superficie cultivée.
+\end{itemize}
+
+\begin{block}{Paradoxe apparent}
+Une unité fréquemment sélectionnée doit être \textit{moins pondérée} dans l'estimateur pour éviter le biais.\\
+Formellement : $w_\alpha = \frac{1}{\pi_\alpha}$ (principe d'Horvitz-Thompson)
+\end{block}
+\end{frame}
+
+% ==============================================
+\section{6.2 Probabilités d'inclusion}
+% ==============================================
+\begin{frame}{6.2 Définitions fondamentales}
+\begin{itemize}
+    \item \textbf{Probabilité d'ordre 1 :} 
+    \[
+    \pi_\alpha = P(\text{unité } \alpha \in \text{échantillon}) \quad \text{avec} \quad \sum_{\alpha=1}^N \pi_\alpha = n
+    \]
+    
+    \item \textbf{Probabilité d'ordre 2 :} 
+    \[
+    \pi_{\alpha\beta} = P(\alpha \text{ et } \beta \in \text{échantillon}) \quad \text{pour } \alpha \neq \beta
+    \]
+\end{itemize}
+
+\textbf{Cas particulier du SAS :}
+\[
+\pi_\alpha = \frac{n}{N} \quad ; \quad \pi_{\alpha\beta} = \frac{n(n-1)}{N(N-1)}
+\]
+
+\begin{alertblock}{Contrainte générale}
+Pour tout plan à taille fixe $n$ : 
+\[
+\sum_{\alpha \neq \beta} \pi_{\alpha\beta} = n(n-1)
+\]
+\end{alertblock}
+\end{frame}
+
+% ==============================================
+\section{6.3 Estimateurs de Horvitz-Thompson}
+% ==============================================
+\begin{frame}{6.3.1 Construction de l'estimateur}
+\small
+Pour un échantillon $S$ tiré selon des probabilités $\pi_\alpha$, l'estimateur de Horvitz-Thompson s'écrit :
+\[
+\hat{T} = \sum_{\alpha \in S} \frac{Y_\alpha}{\pi_\alpha}
+\]
+\textbf{Propriété clé :} Sans biais pour le total $T = \sum_{\alpha=1}^N Y_\alpha$ :
+\[
+E(\hat{T}) = \sum_{\alpha=1}^N \pi_\alpha \cdot \frac{Y_\alpha}{\pi_\alpha} = T
+\]
+
+\begin{exampleblock}{Application à la moyenne}
+Estimateur de la moyenne populationnelle :
+\[
+\hat{\bar{Y}} = \frac{1}{N}\hat{T} = \frac{1}{N} \sum_{\alpha \in S} \frac{Y_\alpha}{\pi_\alpha}
+\]
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{6.3.2 Variance et optimalité}
+\scriptsize
+La variance de $\hat{T}$ s'exprime par :
+\[
+V(\hat{T}) = \frac{1}{2} \sum_{\alpha \neq \beta} (\pi_\alpha \pi_\beta - \pi_{\alpha\beta}) \left( \frac{Y_\alpha}{\pi_\alpha} - \frac{Y_\beta}{\pi_\beta} \right)^2
+\]
+
+\textbf{Cas idéal :} Si $\pi_\alpha = \lambda Y_\alpha$ (proportionnalité exacte), alors :
+\[
+\frac{Y_\alpha}{\pi_\alpha} = \frac{1}{\lambda} \quad \forall \alpha \quad \Rightarrow \quad V(\hat{T}) = 0
+\]
+\vspace{-0.2cm}
+\begin{itemize}
+    \item En pratique, on utilise une variable auxiliaire $X$ corrélée à $Y$
+    \item Choix des probabilités : 
+    \[
+    \pi_\alpha = n \frac{x_\alpha}{\sum_{\alpha=1}^N x_\alpha}
+    \]
+\end{itemize}
+
+\begin{block}{Exemple numérique}
+Population : $N=4$ exploitations avec $X = [2, 3, 1, 4]$.\\
+Pour $n=2$ : $\pi_\alpha = 2 \times \frac{x_\alpha}{10} = [0.4, 0.6, 0.2, 0.8]$
+\end{block}
+\end{frame}
+
+% ==============================================
+\section{6.4 Méthodes de tirage systématique}
+% ==============================================
+\begin{frame}{6.4.1 Méthode des totaux cumulés}
+\footnotesize
+\textbf{Étapes détaillées :}
+\begin{enumerate}
+    \item Ordonner les unités et calculer les tailles cumulées $C_\alpha = \sum_{k=1}^\alpha x_k$
+    \item Calculer le pas de tirage : $p = \frac{C_N}{n}$ (ex : $C_N=100$, $n=5$ $\Rightarrow p=20$)
+    \item Tirer un nombre aléatoire $u \in [1, p]$
+    \item Sélectionner les unités aux positions : $u, u+p, u+2p, \dots$
+\end{enumerate}
+
+\textbf{Exemple :}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+Données : \\
+\begin{tabular}{|c|c|c|}
+\hline
+Unité & $x_\alpha$ & Cumul \\
+\hline
+A & 5 & 5 \\
+B & 8 & 13 \\
+C & 7 & 20 \\
+D & 10 & 30 \\
+\hline
+\end{tabular}
+\end{column}
+\begin{column}{0.5\textwidth}
+Avec $p=7.5$ et $u=3$ : \\
+Unités sélectionnées : B (cumul=13 > 3) et D (cumul=30 > 10.5)
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{6.4.2 Méthode des probabilités cumulées}
+\footnotesize
+\textbf{Algorithme pas-à-pas :}
+\begin{enumerate}
+    \item Calculer les probabilités d'inclusion $\pi_\alpha$ pour chaque unité
+    \item Construire les cumuls : $Q_\alpha = \sum_{k=1}^\alpha \pi_k$
+    \item Générer $u \sim \mathcal{U}([0,1])$
+    \item Déterminer les seuils : $s_i = u + (i-1)$ pour $i=1,\dots,n$
+    \item Sélectionner l'unité $\alpha$ si $Q_{\alpha-1} < s_i \leq Q_\alpha$
+\end{enumerate}
+
+\begin{exampleblock}{Application}
+Avec $\pi = [0.2, 0.4, 0.3, 0.1]$ et $u=0.15$ :\\
+\begin{tabular}{|c|c|c|}
+\hline
+Unité & Cumul & Sélection \\
+\hline
+1 & 0.2 & $0.15 \in [0, 0.2]$ $\Rightarrow$ Oui \\
+2 & 0.6 & $0.15+1=1.15 \notin [0.2,0.6]$ \\
+3 & 0.9 & - \\
+4 & 1.0 & - \\
+\hline
+\end{tabular}
+\end{exampleblock}
+\end{frame}
+\begin{frame}{Synthèse comparative}
+\footnotesize
+\textbf{Méthode 1 : Totaux cumulés}
+\begin{itemize}
+    \item[+] Avantages :
+    \begin{itemize}
+        \item Simplicité conceptuelle
+        \item Efficace pour les grandes populations
+    \end{itemize}
+    \item[--] Limites :
+    \begin{itemize}
+        \item Sensible à l'ordre des données
+        \item Risque de périodicité
+    \end{itemize}
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Méthode 2 : Probabilités cumulées}
+\begin{itemize}
+    \item[+] Avantages :
+    \begin{itemize}
+        \item Respect exact des probabilités
+        \item Adapté aux plans complexes
+    \end{itemize}
+    \item[--] Limites :
+    \begin{itemize}
+        \item Calculs intensifs
+        \item Nécessite un tri préalable
+    \end{itemize}
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}{Synthèse comparative}
+\footnotesize
+\begin{block}{Recommandation}
+Privilégier les probabilités cumulées pour les enquêtes de précision, et les totaux cumulés pour des études exploratoires.
+\end{block}
+\end{frame}
+
+\begin{frame}{Conclusion}
+\small
+\begin{itemize}
+    \item Le sondage à probabilités inégales permet des gains de précision substantiels lorsque des variables auxiliaires sont disponibles
+    \item L'estimateur de Horvitz-Thompson fournit un cadre théorique robuste
+    \item Le choix de la méthode de tirage dépend du contexte opérationnel et des contraintes calculatoires
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{block}{Perspectives}
+Extension aux plans de sondage multi-étapes et intégration avec la stratification.
+\end{block}
+\end{frame}
+
+\end{document}
